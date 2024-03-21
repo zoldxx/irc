@@ -1,0 +1,11 @@
+/rawlog open (endroit ou je veux creer le fichier)
+/rawlog open ~/irc/log.txt
+
+si marche plus, mettre rawlog close dans irssi
+
+cap ls password nickname username
+
+/connect localhost 6667
+
+
+
