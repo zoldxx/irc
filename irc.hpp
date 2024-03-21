@@ -46,10 +46,8 @@ class Channel
     public:
     std::string name;
     std::string topic;
-    std::vector<User> all_users;
-    std::vector<User> normal_users;
-    std::vector<User> operators;
-    std::vector<User> kick_users;
+    std::map<std::string, User> normal_users;
+    std::map<std::string, User> operators;
 };
 
 class Server
@@ -94,7 +92,19 @@ class Server
     void fill_join_msg(std::string &serv_msg, std::string &channel_name, int i);
     int is_valid_nick(std::string &nick);
     int is_valid_str(std::string &str);
+    int del_user(int i);
 };
+
+// class Channel
+// {   
+//     public:
+//     std::string name;
+//     std::string topic;
+//     std::vector<User> all_users;
+//     std::vector<User> normal_users;
+//     std::vector<User> operators;
+//     std::vector<User> kick_users;
+// };
 
 // class Channel
 // {   

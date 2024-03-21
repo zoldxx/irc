@@ -4,14 +4,31 @@
 std::string extract(const std::string& chaine, std::string begin, std::string end) 
 {
     std::size_t debut = chaine.find(begin);
-    std::size_t fin = chaine.find(end, debut + 1) - 1 ; // Recherche de ":" à partir de la position de "#"
-    if (debut != std::string::npos && fin != std::string::npos) {
-        return chaine.substr(debut + 1, fin - debut - 1); // Extraction de la partie entre "# et ":"
-    } else {
-        return ""; // Retourner une chaîne vide si "#" ou ":" n'est pas trouvé
-    }
+    std::size_t fin = chaine.find(end, debut + 1) - 1 ;
+    if (debut != std::string::npos && fin != std::string::npos) 
+        return chaine.substr(debut + 1, fin - debut - 1);
+    else 
+        return "";
 }
 
+int Server::del_user(int i)
+{
+    for (std::vector<std::string>::iterator it = this->users[i].channel_normal.begin(); it != this->users[i].channel_normal.end(); it++)
+    {
+        std::map<std::string, User>::iterator it_user = this->channels[*it].normal_users.find(this->users[i].nick);
+        this->channels[*it].normal_users.erase(it_user);
+    }
+    for (std::vector<std::string>::iterator it = this->users[i].channel_operators.begin(); it != this->users[i].channel_operators.end(); it++)
+    {
+        std::map<std::string, User>::iterator it_user = this->channels[*it].operators.find(this->users[i].nick);
+        this->channels[*it].operators.erase(it_user);
+    }
+    std::map<int, User>::iterator it_user = this->users.find(i);
+    this->users.erase(it_user);
+    this->users[i].channel_normal.clear();
+    this->users[i].channel_operators.clear();
+    return (i);
+}
 
 void Server::read_data_from_socket(int i)
 {
@@ -26,6 +43,7 @@ void Server::read_data_from_socket(int i)
             std::cout << "[" << this->poll_fds[i].fd << "] " << "Client socket closed connection." << std::endl;
         else 
             std::cout << "[Server] Recv error: " << strerror(errno) << std::endl;
+        this->del_user(i);
         close(this->poll_fds[i].fd);
         this->del_from_poll_fds(i);
     }
