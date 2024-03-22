@@ -38,7 +38,7 @@ class User
     int socket_fd;
     std::vector<std::string> channel_normal;
     std::vector<std::string> channel_operators;
-    int is_is_chan(std::string chan);
+    int is_is_chan(std::string &chan);
 };
 
 class Channel
@@ -64,7 +64,7 @@ class Server
     std::map<std::string, Channel> channels;
 
     public:
-    //Server();
+    //gestion du serveur, de la connexion et de la transmission de donnees
     Server(char *port, char *mdp);
     ~Server();
     void set_serv_socket(int sock);
@@ -80,6 +80,7 @@ class Server
     void read_data_from_socket(int i);
     void del_from_poll_fds(int i);
 
+    //commandes
     int is_special_message(int i, char *msg);
     int first_message(int i, char *msg);
     int set_nick(int i, char *msg);
@@ -88,11 +89,15 @@ class Server
     int ping(int i, char *msg);
     int privmsg(int i, char *msg);
     int topic_cmd(int i, char *msg);
+    int kick(int i, char *msg);
+
+    //utils
     int fd_is_in_chan(int fd, std::string channel_name);
     void fill_join_msg(std::string &serv_msg, std::string &channel_name, int i);
     int is_valid_nick(std::string &nick);
     int is_valid_str(std::string &str);
     int del_user(int i);
+    int is_operator(int i, std::string &chan);
 };
 
 // class Channel

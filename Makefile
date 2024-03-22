@@ -3,7 +3,7 @@ NAME	:= ircserv
 CC		:= c++
 FLAGS	:= -Wall -Wextra -Werror -std=c++98 -g
 
-SRC		:= 	main.cpp server.cpp read_data.cpp utils.cpp join.cpp privmsg.cpp ping.cpp first_message.cpp mode.cpp nick.cpp topic.cpp
+SRC		:= 	main.cpp server.cpp read_data.cpp utils.cpp join.cpp privmsg.cpp ping.cpp first_message.cpp mode.cpp nick.cpp topic.cpp kick.cpp
 
 INCLUDE	:=
 

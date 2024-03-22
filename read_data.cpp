@@ -1,10 +1,20 @@
 #include "irc.hpp"
 
 
+// std::string extract(const std::string& chaine, std::string begin, std::string end) 
+// {
+//     std::size_t debut = chaine.find(begin);
+//     std::size_t fin = chaine.find(end, debut + 1) - 1 ;
+//     if (debut != std::string::npos && fin != std::string::npos) 
+//         return chaine.substr(debut + 1, fin - debut - 1);
+//     else 
+//         return "";
+// }
+
 std::string extract(const std::string& chaine, std::string begin, std::string end) 
 {
     std::size_t debut = chaine.find(begin);
-    std::size_t fin = chaine.find(end, debut + 1) - 1 ;
+    std::size_t fin = chaine.find(end, debut + 1);
     if (debut != std::string::npos && fin != std::string::npos) 
         return chaine.substr(debut + 1, fin - debut - 1);
     else 
@@ -70,6 +80,8 @@ int Server::is_special_message(int i, char *msg)
     else if (this->privmsg(i, msg))
         return (1);
     else if (this->topic_cmd(i, msg))
+        return (1);
+    else if (this->kick(i, msg))
         return (1);
     if (!strncmp(msg, "QUIT ", 5))
         return (1);

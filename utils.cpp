@@ -1,5 +1,22 @@
 #include "irc.hpp"
 
+int User::is_is_chan(std::string &chan)
+{
+
+    if (std::find(this->channel_normal.begin(), this->channel_normal.end(), chan) != this->channel_normal.end() || 
+            std::find(this->channel_operators.begin(), this->channel_operators.end(), chan) != this->channel_operators.end())
+        return (1);
+    
+    return (0);
+}
+
+int Server::is_operator(int i, std::string &chan)
+{
+	    if (std::find(this->users[i].channel_operators.begin(), this->users[i].channel_operators.end(), chan) != this->users[i].channel_operators.end())
+        return (1);  
+    return (0);
+}
+
 int valid_args(char *port, char *mdp)
 {
     if (!port || !mdp)

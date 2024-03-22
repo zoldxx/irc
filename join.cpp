@@ -1,15 +1,5 @@
 #include "irc.hpp"
 
-int User::is_is_chan(std::string chan)
-{
-
-    if (std::find(this->channel_normal.begin(), this->channel_normal.end(), chan) != this->channel_normal.end() || 
-            std::find(this->channel_operators.begin(), this->channel_operators.end(), chan) != this->channel_operators.end())
-        return (1);
-    
-    return (0);
-}
-
 void Server::fill_join_msg(std::string &serv_msg, std::string &channel_name, int i)
 {
     serv_msg += ":" + this->users[i].nick + "!~" + this->users[i].username + " JOIN :#" + channel_name + "\r\n";

@@ -5,6 +5,8 @@
 
 //>> :tip!uuuuser@localhost TOPIC #ttt :tooop
 
+//>> :localhost 482 #ttt :You're not channel operator
+
 int Server::topic_cmd(int i, char *msg)
 {
 	if (!strncmp(msg, "TOPIC #", 7))
@@ -13,6 +15,14 @@ int Server::topic_cmd(int i, char *msg)
 		std::string chan = extract(msg, "#", ":");
 		std::string newtopic = extract(msg, ":", "\0");
 		newtopic.erase(newtopic.size() - 2, 2);
+		if (!is_operator(i, chan))
+		{
+			serv_msg = ":localhost 482 #" + chan + " :You're not channel operator\r\n";
+			status = send(this->users[i].socket_fd, serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
+				if (status == -1)
+					std::cout << "[Server] Send error to client fd " << this->users[i].socket_fd << ": " << strerror(errno) << std::endl;
+			return (1);
+		}
 		//std::cout << "chan =" << chan << "|" << "newtopic =" << newtopic << "|\n";
 		// if (!is_valid_str(newtopic))
 		// {
