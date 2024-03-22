@@ -1,30 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   user.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: blerouss <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/22 14:35:41 by blerouss          #+#    #+#             */
+/*   Created: 2024/03/22 16:52:11 by blerouss          #+#    #+#             */
 /*   Updated: 2024/03/22 17:01:23 by blerouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/irc.hpp"
 
-int main(int ac, char **av)
+std::string		User::getBuffer(void)
 {
-    try
-    {
-    	if (ac != 3 || !valid_args(av[1], av[2]))
-			throw invalid_args();
-        Server serv(av[1], av[2]);
-		serv.loop();
-    }
-    catch (std::exception & e)
-    {
-		std::cout << e.what() << std::endl;
-        return (1);
-    }
-    return (0);
+	return _buffer;
+}
+
+void			User::setBuffer(std::string buffer)
+{
+	_buffer = buffer;
 }

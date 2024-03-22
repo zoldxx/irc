@@ -1,4 +1,18 @@
-#include "irc.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: blerouss <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/22 14:48:59 by blerouss          #+#    #+#             */
+/*   Updated: 2024/03/22 17:20:20 by blerouss         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "inc/irc.hpp"
+
+Server* Server::_ptrServer = NULL;
 
 Server::Server(char *port_str, char *mdp)
 {
@@ -6,85 +20,22 @@ Server::Server(char *port_str, char *mdp)
     this->poll_size = 10;
     this->poll_count = 1;
 
-    if (!valid_args(port_str, mdp))
-    {
-        std::cout << "invalid arg" << std::endl;
-        throw std::exception();
-    }
     this->mdp = mdp;
     this->port = atoi(port_str);
     this->set_serv_socket(create_server_socket(this->get_port()));
-    if (this->get_serv_socket() == -1)
-    {
-        std::cout << "create serv socket" << std::endl;
-        throw std::exception();
-    }
-
-    std::cout << "[Server] Listening on port " << PORT << std::endl;
-    this->status = listen(this->get_serv_socket(), 100);
-    if (status != 0)
-    {
-        std::cout << "[Server] Listen error: " << strerror(errno) << std::endl;
-        throw std::exception();
-    }
-    if (!this->calloc_pollfd(this->poll_size))
-    {
-        std::cout << "probleme calloc" << std::endl;
-        throw std::exception();
-    }
+    if (server_socket == -1 || listen(this->get_serv_socket(), 20) == -1
+    	|| !this->calloc_pollfd(this->poll_size))
+	{
+		closeServer(0);
+        throw init_failed();
+	}
     this->poll_fds[0].fd = this->server_socket;
     this->poll_fds[0].events = POLLIN;
+    std::signal(SIGINT, closeServer);
+    std::signal(SIGQUIT, closeServer);
+	initCommand();
+	_ptrServer = this;
 }
-
-// Server::Server(char *port_str, char *mdp)
-// {
-//     this->poll_fds = NULL;
-//     this->poll_size = 10;
-//     this->poll_count = 1;
-
-//     if (!valid_args(port_str, mdp))
-//         throw std::exception();
-//     this->mdp = mdp;
-//     this->port = atoi(port_str);
-//     this->set_serv_socket(create_server_socket(this->get_port()));
-//     if (this->get_serv_socket() == -1)
-//         throw std::exception();
-
-//     std::cout << "[Server] Listening on port " << PORT << std::endl;
-//     this->status = listen(this->get_serv_socket(), 100);
-//     if (status != 0)
-//     {
-//         std::cout << "[Server] Listen error: " << strerror(errno) << std::endl;
-//         throw std::exception();
-//     }
-//     if (!this->calloc_pollfd(this->poll_size))
-//         throw std::exception();
-//     this->poll_fds[0].fd = this->server_socket;
-//     this->poll_fds[0].events = POLLIN;
-// }
-
-// Server::Server(void)
-// {
-//     this->poll_fds = NULL;
-//     this->poll_size = 10;
-//     this->poll_count = 1;
-
-//     this->set_serv_socket(create_server_socket());
-//     if (this->get_serv_socket() == -1)
-//         throw std::exception();
-
-//     std::cout << "[Server] Listening on port " << PORT << std::endl;
-//     this->status = listen(this->get_serv_socket(), 100);
-//     if (status != 0)
-//     {
-//         std::cout << "[Server] Listen error: " << strerror(errno) << std::endl;
-//         throw std::exception();
-//     }
-//     if (!this->calloc_pollfd(this->poll_size))
-//         throw std::exception();
-//     this->poll_fds[0].fd = this->server_socket;
-//     this->poll_fds[0].events = POLLIN;
-// }
 
 Server::~Server(void)
 {
@@ -100,121 +51,91 @@ Server::~Server(void)
     }
 }
 
-void Server::set_serv_socket(int sock)
+void		Server::closeServer(int signal)
 {
-    this->server_socket = sock;
+	close(_ptrServer->server_socket);
+	if (signal != 0)
+		throw closing_server();
 }
 
-int Server::get_serv_socket(void)
+int Server::create_server_socket(int port) 
 {
-    return (this->server_socket);
+    struct sockaddr_in sa;
+    int socket_fd;
+    int status;
+
+    memset(&sa, 0, sizeof sa);
+    sa.sin_family = AF_INET; // IPv4
+    sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK); // 127.0.0.1, localhost
+    sa.sin_port = htons(port);
+
+    // Création de la socket
+    socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
+    if (socket_fd == -1)
+        return (-1);
+
+    // Liaison de la socket à l'adresse et au port
+    status = bind(socket_fd, (struct sockaddr *)&sa, sizeof sa);
+    if (status != 0)
+        return (-1);
+
+    return (socket_fd);
 }
 
-struct pollfd *Server::get_pollfd(void)
+void      		Server::initCommand(void)
 {
-    return (this->poll_fds);
+	//_Command["CAP"]     = &capLs;
+	//_Command["NICK"]    = &nick;
+	//_Command["USER"]    = &user;
+	//_Command["WHOIS"]   = &whois;
+	//_Command["PASS"]    = &pass;
+	//_Command["PING"]    = &ping;
+	//_Command["QUIT"]    = &quit;
+	//_Command["JOIN"]    = &join;
+	//_Command["PRIVMSG"] = &privmsg;
+	//_Command["KICK"]    = &kick;
+	//_Command["TOPIC"]   = &topic;
+	//_Command["MODE"]    = &mode;
+	//_Command["INVITE"]  = &invite;
+	//_Command["PART"]    = &part;
+	//_Command["OPER"]    = &oper;
 }
 
-int Server::get_poll_count(void)
+std::string 	Server::extract(const std::string& chaine, std::string begin, std::string end) 
 {
-    return (this->poll_count);
+    std::size_t debut = chaine.find(begin);
+    std::size_t fin = chaine.find(end, debut + 1);
+    if (debut != std::string::npos && fin != std::string::npos) 
+        return chaine.substr(debut + 1, fin - debut - 1);
+    else 
+        return "";
 }
 
-int Server::get_port(void)
+void	Server::loop(void)
 {
-    return (this->port);
+	std::cout << "---- SERVER ----\n" << std::endl;
+	while (1) 
+	{
+	    int status = poll(poll_fds, poll_count, 9000);
+	    if (status == -1)
+	        return;
+	    else if (status == 0)
+	    {
+	        std::cout << "[Server] Waiting..." << std::endl;
+	        continue;
+	    }
+	    for (int i = 0; i < poll_count; i++) 
+	    {
+    		if ((poll_fds[i].revents & POLLIN) != 1)
+	            continue ;
+    		if (this->poll_fds[i].fd == server_socket)
+			{
+    			int client_fd = accept(server_socket, NULL, NULL);
+    			if (client_fd != -1) 
+    				this->add_to_poll_fds(client_fd);
+			}
+	        else 
+	            handleMessage(i);
+	    }
+	}
 }
-
-int Server::calloc_pollfd(int size)
-{
-    if (!this->poll_fds)
-    {
-        this->poll_fds = (struct pollfd *) calloc(size + 1, sizeof *this->poll_fds);
-        if (!this->poll_fds)
-            return (0);
-        return (1);
-
-    }
-    return (1);
-}
-
-int Server::check_revent(int i)
-{
-    if ((poll_fds[i].revents & POLLIN) != 1)
-        return (1);
-    return (0);
-}
-
-int Server::check_new_connections(int i)
-{
-    if (this->poll_fds[i].fd == this->get_serv_socket())
-        return (1);
-    return (0);
-}
-
-void Server::accept_new_connection(int i)
-{
-    (void) i;
-    int client_fd = accept(server_socket, NULL, NULL);
-    if (client_fd == -1) 
-    {
-        std::cout << "[Server] Accept error: " << strerror(errno) << std::endl;
-        throw std::exception();
-    }
-    this->add_to_poll_fds(client_fd);
-    // this->users[i].socket_fd = client_fd;
-    // std::cout << "user " << i << " a le fd " << client_fd << std::endl;
-    //std::cout << "[Server] Accepted new connection on client socket " << client_fd << std::endl;
-}
-
-
-void Server::add_to_poll_fds(int new_fd)
-{
-    // S'il n'y a pas assez de place, il faut réallouer le tableau de poll_fds
-    if (this->poll_count == this->poll_size) 
-    {
-        this->poll_size *= 2; // Double la taille
-        this->poll_fds = (struct pollfd *) realloc(this->poll_fds, sizeof(*(this->poll_fds)) * (this->poll_size));
-        if (!this->poll_fds)
-        {
-            std::cout << "not enough memory" << std::endl;
-            throw std::exception();
-        }
-    }
-    this->poll_fds[this->poll_count].fd = new_fd;
-    this->poll_fds[this->poll_count].events = POLLIN;
-    this->poll_count++;
-}
-
-void Server::del_from_poll_fds(int i)
-{
-    this->poll_fds[i] = this->poll_fds[this->poll_count - 1];
-    this->poll_count -= 1;
-}
-
-// void Server::accept_new_connection(void)
-// {
-//     int client_fd;
-//     std::string msg;
-//     int status;
-
-//     //std::cout << "accept avant" << std::endl;
-
-//     client_fd = accept(server_socket, NULL, NULL);
-//     if (client_fd == -1) 
-//     {
-//         std::cout << "[Server] Accept error: " << strerror(errno) << std::endl;
-//         throw std::exception();
-//     }
-//     this->add_to_poll_fds(client_fd);
-//     std::cout << "[Server] Accepted new connection on client socket " << client_fd << std::endl;
-
-//     //msg = "Welcome to 42 serv! \n";
-//     //msg = ":nonstop.ix.me.dal.net 001 aaa :Welcome to the DALnet IRC Network aaa!~dberreby@62.210.32.190\n";
-//     msg = "001 Welcome to 42 serv !\n";
-//     status = send(client_fd, msg.c_str(), strlen(msg.c_str()), 0);
-//     if (status == -1)
-//     std::cout << "[Server] Send error to client " << client_fd << strerror(errno) << std::endl;
-// }
-
-// /connect localhost 6667
