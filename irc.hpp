@@ -98,6 +98,8 @@ class Server
     int is_valid_str(std::string &str);
     int del_user(int i);
     int is_operator(int i, std::string &chan);
+    void kick_from_a_chan(std::string &user_to_kick, std::string &chan);
+    void print_chan(int i);
 };
 
 // class Channel

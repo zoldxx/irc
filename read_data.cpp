@@ -14,7 +14,7 @@
 std::string extract(const std::string& chaine, std::string begin, std::string end) 
 {
     std::size_t debut = chaine.find(begin);
-    std::size_t fin = chaine.find(end, debut + 1);
+    std::size_t fin = chaine.find(end, debut + 1) - 1;
     if (debut != std::string::npos && fin != std::string::npos) 
         return chaine.substr(debut + 1, fin - debut - 1);
     else 
@@ -59,6 +59,8 @@ void Server::read_data_from_socket(int i)
     }
     else
     {
+        // std::cout << "dans print :\n";
+        // print_chan(i);
         if (this->is_special_message(i, buffer))
           return ;
     }

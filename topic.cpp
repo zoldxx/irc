@@ -15,6 +15,7 @@ int Server::topic_cmd(int i, char *msg)
 		std::string chan = extract(msg, "#", ":");
 		std::string newtopic = extract(msg, ":", "\0");
 		newtopic.erase(newtopic.size() - 2, 2);
+		std::cout << "chan =" << chan << "|" << "newtopic =" << newtopic << "|\n";
 		if (!is_operator(i, chan))
 		{
 			serv_msg = ":localhost 482 #" + chan + " :You're not channel operator\r\n";
@@ -23,7 +24,6 @@ int Server::topic_cmd(int i, char *msg)
 					std::cout << "[Server] Send error to client fd " << this->users[i].socket_fd << ": " << strerror(errno) << std::endl;
 			return (1);
 		}
-		//std::cout << "chan =" << chan << "|" << "newtopic =" << newtopic << "|\n";
 		// if (!is_valid_str(newtopic))
 		// {
 
