@@ -6,11 +6,21 @@
 /*   By: blerouss <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 17:00:33 by blerouss          #+#    #+#             */
-/*   Updated: 2024/03/22 17:01:23 by blerouss         ###   ########.fr       */
+/*   Updated: 2024/03/22 17:32:52 by blerouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/irc.hpp"
+
+std::string extract(const std::string& chaine, std::string begin, std::string end) 
+{
+    std::size_t debut = chaine.find(begin);
+    std::size_t fin = chaine.find(end, debut + 1) - 1;
+    if (debut != std::string::npos && fin != std::string::npos) 
+        return chaine.substr(debut + 1, fin - debut - 1);
+    else 
+        return "";
+}
 
 int Server::del_user(int i)
 {
