@@ -1,5 +1,5 @@
 *.a
 *.o
 obj
-minishell
+ircserv
 .vscode
