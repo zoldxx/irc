@@ -6,11 +6,7 @@
 /*   By: dberreby <dberreby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 17:00:33 by blerouss          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/03/25 13:59:50 by blerouss         ###   ########.fr       */
-=======
-/*   Updated: 2024/03/25 13:46:33 by dberreby         ###   ########.fr       */
->>>>>>> 6f20e3e56449b2036e88a30ab4bfa285891887b4
+/*   Updated: 2024/03/25 14:14:03 by blerouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +48,9 @@ void		Server::handleMessage(int i)
 	int 			bytes_read;
 
 	memset(&buffer, '\0', sizeof(buffer));
-	std::cout << "handle="<< std::endl;
 	// if (recv(this->poll_fds[fd].fd, buffer, 4, 0) <= 0)
-	bytes_read = recv(this->poll_fds[fd].fd, buffer, BUFSIZ, 0);
+	bytes_read = recv(fd, buffer, sizeof(buffer), 0);
+	std::cout << "handle="<< std::endl;
 	if (bytes_read <= 0)
 	{
 		std::cout << "fd =" << fd << "|handle err = " << strerror(errno) << std::endl;
@@ -81,7 +77,6 @@ void		Server::handleMessage(int i)
 				tmp = cmd.substr(0, cmd.find(" ", 0));
 				cmd.erase(0, cmd.find(" ", 0) + 1);
 				if (_Command.find(tmp) != _Command.end())
-				{
 					_Command.find(tmp)->second(users.find(fd)->second, cmd);
 			}
 		}

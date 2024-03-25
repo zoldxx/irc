@@ -6,7 +6,7 @@
 /*   By: dberreby <dberreby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:48:17 by blerouss          #+#    #+#             */
-/*   Updated: 2024/03/22 17:56:04 by dberreby         ###   ########.fr       */
+/*   Updated: 2024/03/25 14:38:19 by blerouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <cctype>
+#include "../user.hpp"
 
 
 #define PORT 6667
@@ -47,23 +48,6 @@ class	invalid_args :  public std::exception
 
 };
 
-class Channel;
-
-class User
-{
-    public:
-
-    	int 			is_is_chan(std::string &chan);
-		std::string		getBuffer(void);
-		void			setBuffer(std::string buffer);
-
-    	std::string 				nick;
-    	std::string 				username;
-    	std::string 				_buffer;
-    	int 						socket_fd;
-    	std::vector<std::string> 	channel_normal;
-    	std::vector<std::string>	channel_operators;
-};
 
 class Channel
 {   
