@@ -10,29 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "inc/irc.hpp"
+#include "inc/server.hpp"
 
 void			Server::set_serv_socket(int sock)
 {
-    this->server_socket = sock;
+    _server_socket = sock;
 }
 
 int				Server::get_serv_socket(void)
 {
-    return (this->server_socket);
+    return (_server_socket);
 }
 
 struct pollfd 	*Server::get_pollfd(void)
 {
-    return (this->poll_fds);
+    return (_poll_fds);
 }
 
 int				Server::get_poll_count(void)
 {
-    return (this->poll_count);
+    return (_poll_count);
 }
 
 int 			Server::get_port(void)
 {
-    return (this->port);
+    return (_port);
 }

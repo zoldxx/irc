@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "inc/irc.hpp"
+#include "inc/server.hpp"
 
 int Server::calloc_pollfd(int size)
 {
-    if (!this->poll_fds)
+    if (!this->_poll_fds)
     {
-        this->poll_fds = (struct pollfd *) calloc(size + 1, sizeof *this->poll_fds);
-        if (!this->poll_fds)
+        this->_poll_fds = (struct pollfd *) calloc(size + 1, sizeof *this->_poll_fds);
+        if (!this->_poll_fds)
             return (0);
     }
     return (1);
@@ -25,21 +25,21 @@ int Server::calloc_pollfd(int size)
 
 void Server::add_to_poll_fds(int new_fd)
 {
-    // S'il n'y a pas assez de place, il faut réallouer le tableau de poll_fds
-    if (this->poll_count == this->poll_size) 
+    // S'il n'y a pas assez de place, il faut réallouer le tableau de _poll_fds
+    if (this->_poll_count == this->_poll_size) 
     {
-        this->poll_size *= 2; // Double la taille
-        this->poll_fds = (struct pollfd *) realloc(this->poll_fds, sizeof(*(this->poll_fds)) * (this->poll_size));
-        if (!this->poll_fds)
+        this->_poll_size *= 2; // Double la taille
+        this->_poll_fds = (struct pollfd *) realloc(this->_poll_fds, sizeof(*(this->_poll_fds)) * (this->_poll_size));
+        if (!this->_poll_fds)
             throw fatal_error();
     }
-    this->poll_fds[this->poll_count].fd = new_fd;
-    this->poll_fds[this->poll_count].events = POLLIN;
-    this->poll_count++;
+    this->_poll_fds[this->_poll_count].fd = new_fd;
+    this->_poll_fds[this->_poll_count].events = POLLIN;
+    this->_poll_count++;
 }
 
 void Server::del_from_poll_fds(int i)
 {
-    this->poll_fds[i] = this->poll_fds[this->poll_count - 1];
-    this->poll_count -= 1;
+    this->_poll_fds[i] = this->_poll_fds[this->_poll_count - 1];
+    this->_poll_count -= 1;
 }

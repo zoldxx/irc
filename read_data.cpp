@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "inc/irc.hpp"
+#include "inc/server.hpp"
 
 std::string extract(const std::string& chaine, std::string begin, std::string end) 
 {
@@ -24,27 +24,27 @@ std::string extract(const std::string& chaine, std::string begin, std::string en
 
 int Server::del_user(int i)
 {
-    for (std::vector<std::string>::iterator it = this->users[i].channel_normal.begin(); it != this->users[i].channel_normal.end(); it++)
-    {
-        std::map<std::string, User>::iterator it_user = this->channels[*it].normal_users.find(this->users[i].nick);
-        this->channels[*it].normal_users.erase(it_user);
-    }
-    for (std::vector<std::string>::iterator it = this->users[i].channel_operators.begin(); it != this->users[i].channel_operators.end(); it++)
-    {
-        std::map<std::string, User>::iterator it_user = this->channels[*it].operators.find(this->users[i].nick);
-        this->channels[*it].operators.erase(it_user);
-    }
-    std::map<int, User>::iterator it_user = this->users.find(i);
-    this->users.erase(it_user);
-    this->users[i].channel_normal.clear();
-    this->users[i].channel_operators.clear();
+    // for (std::vector<std::string>::iterator it = this->users[i].channels.begin(); it != this->users[i].channels.end(); it++)
+    // {
+    //     std::map<std::string, User>::iterator it_user = this->channels[*it].normal_users.find(this->users[i].nick);
+    //     this->channels[*it].normal_users.erase(it_user);
+    // }
+    // for (std::vector<std::string>::iterator it = this->users[i].channel_operators.begin(); it != this->users[i].channel_operators.end(); it++)
+    // {
+    //     std::map<std::string, User>::iterator it_user = this->channels[*it].operators.find(this->users[i].nick);
+    //     this->channels[*it].operators.erase(it_user);
+    // }
+    // std::map<int, User>::iterator it_user = this->users.find(i);
+    // this->users.erase(it_user);
+    // this->users[i].channel_normal.clear();
+    // this->users[i].channel_operators.clear();
     return (i);
 }
 
 void		Server::handleMessage(int i)
 {
 	char			buffer[512];
-	int				fd = poll_fds[i].fd;
+	int				fd = _poll_fds[i].fd;
 	int 			bytes_read;
 
 	memset(&buffer, '\0', sizeof(buffer));
@@ -56,17 +56,17 @@ void		Server::handleMessage(int i)
 		std::cout << "fd =" << fd << "|handle err = " << strerror(errno) << std::endl;
 		std::cout << "buffer =" << buffer << std::endl;
 		del_user(fd);
-        close(this->poll_fds[fd].fd);
+        close(this->_poll_fds[fd].fd);
         this->del_from_poll_fds(fd);
 	}
 	else
 	{
-		std::string					line = users.find(fd)->second.getBuffer() + buffer;
+		std::string					line = _users.find(fd)->second.getBuffer() + buffer;
 		std::string					cmd;
 		std::string					tmp;
     	std::string::size_type		end;
 		std::cout << "buffer =" << buffer << "line =" << line << std::endl;
-		users.find(fd)->second.setBuffer("");
+		_users.find(fd)->second.setBuffer("");
 		while ((end = line.find("\r\n", 0)) != std::string::npos)
 		{
 			cmd = line.substr(0, end);
@@ -76,12 +76,12 @@ void		Server::handleMessage(int i)
 			{
 				tmp = cmd.substr(0, cmd.find(" ", 0));
 				cmd.erase(0, cmd.find(" ", 0) + 1);
-				if (_Command.find(tmp) != _Command.end())
-					_Command.find(tmp)->second(users.find(fd)->second, cmd);
+				if (_command.find(tmp) != _command.end())
+					_command.find(tmp)->second(_users.find(fd)->second, cmd);
 			}
 		}
 		if (line.begin() != line.end())
-			users.find(fd)->second.setBuffer(line);
+			_users.find(fd)->second.setBuffer(line);
 	}
 }
 
