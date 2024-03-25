@@ -1,36 +1,25 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   server.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dberreby <dberreby@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/22 14:48:59 by blerouss          #+#    #+#             */
-/*   Updated: 2024/03/25 13:41:53 by dberreby         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "inc/irc.hpp"
+#include "inc/server.hpp"
+#include "inc/user.hpp"
 
 Server* Server::_ptrServer = NULL;
 
 Server::Server(char *port_str, char *mdp)
 {
-    this->poll_fds = NULL;
-    this->poll_size = 10;
-    this->poll_count = 1;
+    this->_poll_fds = NULL;
+    this->_poll_size = 10;
+    this->_poll_count = 1;
 
-    this->mdp = mdp;
-    this->port = atoi(port_str);
+    this->_mdp = mdp;
+    this->_port = atoi(port_str);
     this->set_serv_socket(create_server_socket(this->get_port()));
-    if (server_socket == -1 || listen(this->get_serv_socket(), 20) == -1
-    	|| !this->calloc_pollfd(this->poll_size))
+    if (_server_socket == -1 || listen(this->get_serv_socket(), 20) == -1
+    	|| !this->calloc_pollfd(this->_poll_size))
 	{
 		closeServer(0);
         throw init_failed();
 	}
-    this->poll_fds[0].fd = this->server_socket;
-    this->poll_fds[0].events = POLLIN;
+    this->_poll_fds[0].fd = this->_server_socket;
+    this->_poll_fds[0].events = POLLIN;
     std::signal(SIGINT, closeServer);
     std::signal(SIGQUIT, closeServer);
 	initCommand();
@@ -39,21 +28,21 @@ Server::Server(char *port_str, char *mdp)
 
 Server::~Server(void)
 {
-    if (this->poll_fds)
+    if (this->_poll_fds)
     {
         int i = 0;
-        while (i < poll_count)
+        while (i < _poll_count)
         {
-            close(this->poll_fds[i].fd);
+            close(this->_poll_fds[i].fd);
             i++;
         }
-        free(this->poll_fds);
+        free(this->_poll_fds);
     }
 }
 
 void		Server::closeServer(int signal)
 {
-	close(_ptrServer->server_socket);
+	close(_ptrServer->_server_socket);
 	if (signal != 0)
 		throw closing_server();
 }
@@ -116,7 +105,7 @@ void	Server::loop(void)
 	std::cout << "---- SERVER ----\n" << std::endl;
 	while (1) 
 	{
-	    int status = poll(poll_fds, poll_count, 9000);
+	    int status = poll(_poll_fds,_poll_count, 9000);
 	    if (status == -1)
 	        return;
 	    else if (status == 0)
@@ -124,17 +113,21 @@ void	Server::loop(void)
 	        std::cout << "[Server] Waiting..." << std::endl;
 	        continue;
 	    }
-	    for (int i = 0; i < poll_count; i++) 
+	    for (int i = 0; i < _poll_count; i++) 
 	    {
-    		if ((poll_fds[i].revents & POLLIN) != 1)
+    		if ((_poll_fds[i].revents & POLLIN) != 1)
 	            continue ;
-    		if (this->poll_fds[i].fd == server_socket)
+    		if (this->_poll_fds[i].fd == _server_socket)
 			{
-    			int client_fd = accept(server_socket, NULL, NULL);
+    			int client_fd = accept(_server_socket, NULL, NULL);
 				//std::cout << "fd =" << client_fd << std::endl;
 
     			if (client_fd != -1) 
+				{
     				this->add_to_poll_fds(client_fd);
+					User tmp(client_fd);
+					_users[client_fd] = tmp;
+				}
 			}
 	        else 
 	            handleMessage(i);

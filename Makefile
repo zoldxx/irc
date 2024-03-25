@@ -1,23 +1,12 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: tgeorge <tgeorge@student.42.fr>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/03/22 14:26:42 by blerouss          #+#    #+#              #
-#    Updated: 2024/03/25 13:43:28 by tgeorge          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME	=	ircserv
 
 SRC		=	main.cpp						\
 			server.cpp						\
 			user.cpp						\
-			getter_setter.cpp				\
-			handlePoll.cpp					\
-			throw.cpp						\
+			channel.cpp						\
+			server_getset.cpp				\
+			server_poll.cpp					\
+			server_exception.cpp			\
 			read_data.cpp					\
 			utils.cpp						\
 			join.cpp						\
@@ -66,7 +55,7 @@ endef
 all : $(NAME)
 
 $(NAME) : $(SRC) $(OBJ) $(INC)
-	$(CXX) $(CXXFLAGS) $(OBJ) -I $(INC) -o $(NAME)
+	@$(CXX) $(CXXFLAGS) $(OBJ) -I $(INC) -o $(NAME)
 	@echo "\n $(BOLD)$(NAME)$(UNBOLD) is built  🪄$(RESET)"
 
 $(OBJ_DIR)/%.o: %.cpp
