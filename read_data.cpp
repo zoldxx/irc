@@ -6,7 +6,7 @@
 /*   By: dberreby <dberreby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 17:00:33 by blerouss          #+#    #+#             */
-/*   Updated: 2024/03/25 13:46:33 by dberreby         ###   ########.fr       */
+/*   Updated: 2024/03/25 13:57:52 by dberreby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void		Server::handleMessage(int fd)
 // 	memset(&buffer, '\0', sizeof(buffer));
 // 	std::cout << "handle="<< std::endl;
 // 	// if (recv(this->poll_fds[fd].fd, buffer, 4, 0) <= 0)
-// 	if (recv(this->poll_fds[fd].fd, buffer, sizeof(buffer) - 1, MSG_DONTWAIT) <= 0)
+	if (recv(this->poll_fds[fd].fd, buffer, sizeof(buffer) - 1, MSG_DONTWAIT) <= 0)
 // 	{
 // 		std::cout << "fd =" << fd << "|handle err = " << strerror(errno) << std::endl;
 // 		std::cout << "buffer =" << buffer << std::endl;
