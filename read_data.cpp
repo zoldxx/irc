@@ -6,7 +6,7 @@
 /*   By: blerouss <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 17:00:33 by blerouss          #+#    #+#             */
-/*   Updated: 2024/03/22 17:32:52 by blerouss         ###   ########.fr       */
+/*   Updated: 2024/03/25 13:59:50 by blerouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,17 @@ int Server::del_user(int i)
     return (i);
 }
 
-void		Server::handleMessage(int fd)
+void		Server::handleMessage(int i)
 {
 	char			buffer[512];
+	int				fd = poll_fds[i].fd;
 
 	memset(&buffer, '\0', sizeof(buffer));
 	if (recv(fd, buffer, sizeof(buffer) - 1, MSG_DONTWAIT) <= 0)
 	{
-		del_user(fd);
-        close(this->poll_fds[fd].fd);
-        this->del_from_poll_fds(fd);
+		del_user(i);
+        close(fd);
+        this->del_from_poll_fds(i);
 	}
 	else
 	{
@@ -69,6 +70,7 @@ void		Server::handleMessage(int fd)
 				tmp = cmd.substr(0, cmd.find(" ", 0));
 				cmd.erase(0, cmd.find(" ", 0) + 1);
 				if (_Command.find(tmp) != _Command.end())
+				{
 					_Command.find(tmp)->second(users.find(fd)->second, cmd);
 			}
 		}
