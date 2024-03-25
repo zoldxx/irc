@@ -6,7 +6,7 @@
 #    By: tgeorge <tgeorge@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/22 14:26:42 by blerouss          #+#    #+#              #
-#    Updated: 2024/03/25 13:41:18 by tgeorge          ###   ########.fr        #
+#    Updated: 2024/03/25 13:43:28 by tgeorge          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ $(OBJ_DIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 
-TOTAL_FILES := $(words $(SRCvoid Server::print_chan(int i)))
+TOTAL_FILES := $(words $(SRC))
 CURRENT_FILE = 0
 PERCENTAGE = 0
 
