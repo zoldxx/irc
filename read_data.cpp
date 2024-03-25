@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_data.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blerouss <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dberreby <dberreby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 17:00:33 by blerouss          #+#    #+#             */
-/*   Updated: 2024/03/22 17:32:52 by blerouss         ###   ########.fr       */
+/*   Updated: 2024/03/25 13:46:33 by dberreby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,16 @@ int Server::del_user(int i)
 void		Server::handleMessage(int fd)
 {
 	char			buffer[512];
+	int 			bytes_read;
 
 	memset(&buffer, '\0', sizeof(buffer));
-	if (recv(fd, buffer, sizeof(buffer) - 1, MSG_DONTWAIT) <= 0)
+	std::cout << "handle="<< std::endl;
+	// if (recv(this->poll_fds[fd].fd, buffer, 4, 0) <= 0)
+	bytes_read = recv(this->poll_fds[fd].fd, buffer, BUFSIZ, 0);
+	if (bytes_read <= 0)
 	{
+		std::cout << "fd =" << fd << "|handle err = " << strerror(errno) << std::endl;
+		std::cout << "buffer =" << buffer << std::endl;
 		del_user(fd);
         close(this->poll_fds[fd].fd);
         this->del_from_poll_fds(fd);
@@ -58,12 +64,13 @@ void		Server::handleMessage(int fd)
 		std::string					cmd;
 		std::string					tmp;
     	std::string::size_type		end;
-
+		std::cout << "buffer =" << buffer << "line =" << line << std::endl;
 		users.find(fd)->second.setBuffer("");
 		while ((end = line.find("\r\n", 0)) != std::string::npos)
 		{
 			cmd = line.substr(0, end);
 			line.erase(0, end + 2);
+			std::cout << "line =" << line << std::endl;
 			if (cmd.find(" ", 0) != std::string::npos)
 			{
 				tmp = cmd.substr(0, cmd.find(" ", 0));
@@ -76,3 +83,44 @@ void		Server::handleMessage(int fd)
 			users.find(fd)->second.setBuffer(line);
 	}
 }
+
+// void		Server::handleMessage(int fd)
+// {
+// 	char			buffer[512];
+
+// 	memset(&buffer, '\0', sizeof(buffer));
+// 	std::cout << "handle="<< std::endl;
+// 	// if (recv(this->poll_fds[fd].fd, buffer, 4, 0) <= 0)
+// 	if (recv(this->poll_fds[fd].fd, buffer, sizeof(buffer) - 1, MSG_DONTWAIT) <= 0)
+// 	{
+// 		std::cout << "fd =" << fd << "|handle err = " << strerror(errno) << std::endl;
+// 		std::cout << "buffer =" << buffer << std::endl;
+// 		del_user(fd);
+//         close(this->poll_fds[fd].fd);
+//         this->del_from_poll_fds(fd);
+// 	}
+// 	else
+// 	{
+// 		std::string					line = users.find(fd)->second.getBuffer() + buffer;
+// 		std::string					cmd;
+// 		std::string					tmp;
+//     	std::string::size_type		end;
+// 		std::cout << "buffer =" << buffer << "line =" << line << std::endl;
+// 		users.find(fd)->second.setBuffer("");
+// 		while ((end = line.find("\r\n", 0)) != std::string::npos)
+// 		{
+// 			cmd = line.substr(0, end);
+// 			line.erase(0, end + 2);
+// 			std::cout << "line =" << line << std::endl;
+// 			if (cmd.find(" ", 0) != std::string::npos)
+// 			{
+// 				tmp = cmd.substr(0, cmd.find(" ", 0));
+// 				cmd.erase(0, cmd.find(" ", 0) + 1);
+// 				if (_Command.find(tmp) != _Command.end())
+// 					_Command.find(tmp)->second(users.find(fd)->second, cmd);
+// 			}
+// 		}
+// 		if (line.begin() != line.end())
+// 			users.find(fd)->second.setBuffer(line);
+// 	}
+// }
