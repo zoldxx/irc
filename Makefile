@@ -55,7 +55,7 @@ endef
 all : $(NAME)
 
 $(NAME) : $(SRC) $(OBJ) $(INC)
-	$(CXX) $(CXXFLAGS) $(OBJ) -I $(INC) -o $(NAME)
+	@$(CXX) $(CXXFLAGS) $(OBJ) -I $(INC) -o $(NAME)
 	@echo "\n $(BOLD)$(NAME)$(UNBOLD) is built  🪄$(RESET)"
 
 $(OBJ_DIR)/%.o: %.cpp
