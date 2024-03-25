@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blerouss <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dberreby <dberreby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:48:59 by blerouss          #+#    #+#             */
-/*   Updated: 2024/03/22 18:41:22 by blerouss         ###   ########.fr       */
+/*   Updated: 2024/03/25 14:01:34 by blerouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,8 @@ void	Server::loop(void)
     		if (this->poll_fds[i].fd == server_socket)
 			{
     			int client_fd = accept(server_socket, NULL, NULL);
+				//std::cout << "fd =" << client_fd << std::endl;
+
     			if (client_fd != -1) 
     				this->add_to_poll_fds(client_fd);
 			}

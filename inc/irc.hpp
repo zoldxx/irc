@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blerouss <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dberreby <dberreby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:48:17 by blerouss          #+#    #+#             */
-/*   Updated: 2024/03/22 17:20:05 by blerouss         ###   ########.fr       */
+/*   Updated: 2024/03/22 17:56:04 by dberreby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,10 @@ class Server
     	int 		is_valid_str(std::string &str);
     	int 		del_user(int i);
     	int 		is_operator(int i, std::string &chan);
+		void 		print_chan(int i);
+		void 		kick_from_a_chan(std::string &user_to_kick, std::string &chan);
+
+
 
 	//exception
 
