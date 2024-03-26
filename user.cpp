@@ -4,7 +4,7 @@ User::User()
 {
 }
 
-User::User(int fd) : _fd(fd)
+User::User(int fd) : _fd(fd) , _status(0)
 {
 }
 
@@ -15,6 +15,11 @@ User::~User(void)
 int					User::getFd(void) const
 {
 	return this->_fd;
+}
+
+int					User::getStatus(void) const
+{
+	return this->_status;
 }
 
 std::string		User::getBuffer(void) const
@@ -35,6 +40,11 @@ std::string		User::getUsername(void) const
 std::vector<std::string>	User::getChannels(void) const
 {
 	return (_channels);
+}
+
+void				User::setStatus(int status)
+{
+	_status = status;
 }
 
 void			User::setBuffer(std::string buffer)
