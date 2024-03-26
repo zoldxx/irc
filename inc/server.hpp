@@ -93,9 +93,7 @@ class Server
     	int 		del_user(int i);
     	int 		is_operator(int i, std::string &chan);
 		void 		print_chan(int i);
-		void 		kick_from_a_chan(std::string &user_to_kick, std::string &chan);
-
-
+		void 		kick_from_a_chan(std::string &user_to_kick, std::string &chan, int fd_to_kick);
 
 	//exception
 

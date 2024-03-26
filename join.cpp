@@ -23,6 +23,72 @@ void Server::fill_join_msg(std::string &serv_msg, std::string &channel_name, int
     serv_msg += "\r\n:localhost 366 " + _users[i].getNick() + " #" + channel_name + " :End of /NAMES list\r\n";  
 }
 
+bool Server::join(User &client, std::string cmd)
+{
+    // int status;
+    std::string serv_msg;
+    std::string channel_name = cmd.substr(1, std::string::npos);
+    channel_name.erase(channel_name.size() - 2, 2);
+    
+    if (_channels[channel_name].getUsers().size() == 0)
+    {
+        serv_msg = ":localhost 403 #" + channel_name + " :No such channel\r\n";
+        _channels[channel_name].getOperators().push_back(client.getFd());
+    }
+    _channels[channel_name].getUsers().push_back(client.getFd());
+    client.getChannels().push_back(channel_name);
+    fill_join_msg(serv_msg, channel_name, client.getFd());
+    std::string msg_to_send = ":" + client.getNick() + "!~" + client.getUsername() + " JOIN :#" + channel_name + "\r\n";
+
+    for (int j = 1; j < this->get_poll_count(); j++)
+    {
+        std::vector<int> vec_user = _channels.find(channel_name)->second.getUsers();
+        for (std::vector<int>::iterator ite = vec_user.begin(); ite != vec_user.end(); ite++)
+        {
+            if (send(*ite, msg_to_send.c_str(), msg_to_send.size(), 0) < 1)
+                //delete user *ite 
+                return (false);
+        }
+    }
+    return (0);
+}
+
+// bool Server::join(User &client, std::string cmd)
+// {
+//     int status;
+//     std::string serv_msg;
+//     std::string channel_name = cmd.substr(1, std::string::npos);
+//     channel_name.erase(channel_name.size() - 2, 2);
+    
+//     if (_channels[channel_name].getUsers().size() == 0)
+//     {
+//         serv_msg = ":localhost 403 #" + channel_name + " :No such channel\r\n";
+//         _channels[channel_name].getOperators().push_back(client.getFd());
+//     }
+//     _channels[channel_name].getUsers().push_back(client.getFd());
+//     client.getChannels().push_back(channel_name);
+//     fill_join_msg(serv_msg, channel_name, client.getFd());
+//     std::string msg_to_send = ":" + client.getNick() + "!~" + client.getUsername() + " JOIN :#" + channel_name + "\r\n";
+
+//     for (int j = 1; j < this->get_poll_count(); j++)
+//     {
+//         if (_channels[channel_name].isInChan(_users[j].getFd()) && client.getFd() != _users[j].getFd())
+//         {
+//             status = send(_users[j].getFd(), msg_to_send.c_str(), strlen(msg_to_send.c_str()), 0);
+//             if (status == -1)
+//                 std::cout << "[Server] Send error to client fd " << _users[j].getFd() << ": " << strerror(errno) << std::endl;
+//         }
+//         else if (_channels[channel_name].isInChan(_users[j].getFd()) && client.getFd() == _users[j].getFd())
+//         {
+//             status = send(_users[j].getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
+//             if (status == -1)
+//                 std::cout << "[Server] Send error to client fd " << _users[j].getFd() << ": " << strerror(errno) << std::endl;
+//         }
+//     }
+//     return (0);
+// }
+
+
 // bool Server::join(User client, std::string msg)
 // {
 //     std::string serv_msg;

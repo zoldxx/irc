@@ -1,5 +1,64 @@
 #include "inc/server.hpp"
 
+void Server::kick_from_a_chan(std::string &user_to_kick, std::string &chan, int fd_to_kick)
+{
+    (void) user_to_kick;
+    std::vector<int>::iterator it = std::find(_channels[chan].getUsers().begin(), _channels[chan].getUsers().end(), fd_to_kick);
+    if (it != _channels[chan].getUsers().end())
+        _channels[chan].getUsers().erase(it);
+
+    it = std::find(_channels[chan].getOperators().begin(), _channels[chan].getOperators().end(), fd_to_kick);
+        if (it != _channels[chan].getOperators().end())
+        _channels[chan].getOperators().erase(it);
+    
+    std::vector<std::string>::iterator ite = std::find(_users[fd_to_kick].getChannels().begin(),_users[fd_to_kick].getChannels().end(), chan);
+    if (ite != _users[fd_to_kick].getChannels().end())
+        _users[fd_to_kick].getChannels().erase(ite);
+}
+
+bool Server::kick(User &client, std::string cmd)
+{
+    int status;
+    std::string serv_msg;
+    std::string chan = cmd.substr(1, cmd.find(" ", 1) - 1);
+    std::string user_to_kick = cmd.substr(2 + chan.size(), std::string::npos);
+    user_to_kick.erase(user_to_kick.size() - 4, 4);
+    //std::cout << "chan =" << chan << "|user to kick =" << user_to_kick << "|\n";
+    if (!_channels[chan].isOperator(client.getFd()))
+	{
+		serv_msg = ":localhost 482 #" + chan + " :You're not channel operator\r\n";
+		status = send(client.getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
+			if (status == -1)
+				std::cout << "[Server] Send error to client fd " << client.getFd() << ": " << strerror(errno) << std::endl;
+		return (1);
+	}
+
+    int fd_to_kick = 0;
+    for (std::map<int, User>::iterator it = _users.begin(); it != _users.end(); it++)
+    {
+        if (it->second.getNick() == user_to_kick)
+            fd_to_kick = it->second.getFd();
+    }
+    if (fd_to_kick == 0)
+    {
+        //message d'erreur personne a kick
+        return (1);
+    }
+    
+    serv_msg = ":" + client.getNick() + "!" + client.getUsername() + "@localhost KICK #" + chan + " " + user_to_kick + " :\r\n";
+    for (int j = 1; j < this->get_poll_count(); j++)
+	{	
+		if (_channels[chan].isInChan(_users[j].getFd()))
+        {
+            status = send(_users[j].getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
+            if (status == -1)
+                std::cout << "[Server] Send error to client fd " << _users[j].getFd() << ": " << strerror(errno) << std::endl;
+        }
+	}
+    kick_from_a_chan(user_to_kick, chan, fd_to_kick);
+    return (1);
+}
+
 // void Server::print_chan(int i)
 // {
 //     std::cout << "normal chan = ";

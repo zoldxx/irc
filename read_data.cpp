@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   read_data.cpp                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dberreby <dberreby@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/22 17:00:33 by blerouss          #+#    #+#             */
-/*   Updated: 2024/03/26 15:00:02 by blerouss         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "inc/server.hpp"
 
 std::string extract(const std::string& chaine, std::string begin, std::string end) 
@@ -67,6 +55,7 @@ void		Server::handleMessage(int i)
 			if (cmd.find(" ", 0) != std::string::npos)
 			{
 				tmp = cmd.substr(0, cmd.find(" ", 0));
+				std::cout << "tmp =" << tmp << std::endl;
 				cmd.erase(0, cmd.find(" ", 0) + 1);
 				if (_command.find(tmp) != _command.end())
 					(this->*_command[tmp])(_users.find(fd)->second, cmd);
