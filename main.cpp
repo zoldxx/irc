@@ -3,14 +3,14 @@
 
 int valid_args(std::string port, std::string mdp)
 {
-    if (port.size() < 3 || port.size() > 5)
+    if (port.size() < 1 || port.size() > 5)
         return (0);
     for (size_t i = 0; i < port.size(); i++)
     {
-        if (!(port[i] >= '0' && port[i] <= '9'))
+        if (!isdigit(port[i]))
             return (0);
     }
-    if (mdp.size() < 1)
+    if (mdp.size() < 1 || atoi(port.c_str()) == 0)
         return (0);
     return (1);
 }

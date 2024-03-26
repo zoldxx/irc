@@ -5,14 +5,15 @@ Server* Server::_ptrServer = NULL;
 
 Server::Server(char *port_str, char *mdp)
 {
+	_ptrServer = this;
     this->_poll_fds = NULL;
     this->_poll_size = 10;
     this->_poll_count = 1;
 
     this->_mdp = mdp;
     this->_port = atoi(port_str);
-    this->set_serv_socket(create_server_socket(this->get_port()));
-    if (_server_socket == -1 || listen(this->get_serv_socket(), 20) == -1
+    _server_socket = create_server_socket(this->get_port());
+    if (listen(this->get_serv_socket(), 20) == -1
     	|| !this->calloc_pollfd(this->_poll_size))
 	{
 		closeServer(0);
@@ -23,7 +24,6 @@ Server::Server(char *port_str, char *mdp)
     std::signal(SIGINT, closeServer);
     std::signal(SIGQUIT, closeServer);
 	initCommand();
-	_ptrServer = this;
 }
 
 Server::~Server(void)
@@ -61,12 +61,15 @@ int Server::create_server_socket(int port)
     // Création de la socket
     socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
     if (socket_fd == -1)
-        return (-1);
+		throw init_failed();
 
     // Liaison de la socket à l'adresse et au port
     status = bind(socket_fd, (struct sockaddr *)&sa, sizeof sa);
     if (status != 0)
-        return (-1);
+	{
+		close(socket_fd);
+		throw init_failed();
+	}
 
     return (socket_fd);
 }

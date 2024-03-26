@@ -13,6 +13,7 @@ bool Server::user(User & client, std::string cmd)
 	{
 		client.setStatus(4);
  		msg = ":localhost 001 " + client.getNick() + " :Welcome to bdtServer " + client.getNick() + "!~" + client.getUsername() + "@127.0.0.1\r\n";
+
  		if (send(client.getFd(), msg.c_str(), msg.size(), 0) < 1)
 			//del client
 			return (false);
