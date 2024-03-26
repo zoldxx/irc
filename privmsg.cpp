@@ -9,7 +9,7 @@ bool	Server::privmsg(User client, std::string cmd)
     std::string msg_to_send = ":" + _users[client.getFd()].getNick() + "!~" + _users[client.getFd()].getUsername() + "@localhost PRIVMSG #" + channel_name + " :" + msg_str;
     for (int j = 1; j < this->get_poll_count(); j++)
     {
-        if (_channels[channel_name].isInChan(client.getFd()) && client.getFd() != j)
+        if (_channels[channel_name].isInChan(_users[j].getFd()) && client.getFd() != _users[j].getFd())
         {
             status = send(_users[j].getFd(), msg_to_send.c_str(), strlen(msg_to_send.c_str()), 0);
             if (status == -1)

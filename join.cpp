@@ -23,12 +23,11 @@ void Server::fill_join_msg(std::string &serv_msg, std::string &channel_name, int
     serv_msg += "\r\n:localhost 366 " + _users[i].getNick() + " #" + channel_name + " :End of /NAMES list\r\n";  
 }
 
-bool Server::join(User client, std::string msg)
+bool Server::join(User client, std::string cmd)
 {
     int status;
     std::string serv_msg;
-    std::string str_msg = msg;
-    std::string channel_name = str_msg.substr(0, std::string::npos);
+    std::string channel_name = cmd.substr(1, std::string::npos);
     channel_name.erase(channel_name.size() - 2, 2);
     
     if (_channels[channel_name].getUsers().size() == 0)
@@ -43,13 +42,13 @@ bool Server::join(User client, std::string msg)
 
     for (int j = 1; j < this->get_poll_count(); j++)
     {
-        if (_channels[channel_name].isInChan(client.getFd()) && client.getFd() != j)
+        if (_channels[channel_name].isInChan(_users[j].getFd()) && client.getFd() != _users[j].getFd())
         {
             status = send(_users[j].getFd(), msg_to_send.c_str(), strlen(msg_to_send.c_str()), 0);
             if (status == -1)
                 std::cout << "[Server] Send error to client fd " << _users[j].getFd() << ": " << strerror(errno) << std::endl;
         }
-        else if (_channels[channel_name].isInChan(client.getFd()) && client.getFd() == j)
+        else if (_channels[channel_name].isInChan(_users[j].getFd()) && client.getFd() == _users[j].getFd())
         {
             status = send(_users[j].getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
             if (status == -1)

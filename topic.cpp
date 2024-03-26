@@ -26,7 +26,7 @@ bool	Server::topic(User client, std::string cmd)
 	serv_msg = ":" + client.getNick() + "!" + client.getUsername() + "@localhost TOPIC #" + chan + " :" + newtopic + "\r\n";
 	for (int j = 1; j < this->get_poll_count(); j++)
 	{	
-		if (_channels[chan].isInChan(client.getFd()))
+		if (_channels[chan].isInChan(_users[j].getFd()))
         {
             status = send(_users[j].getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
             if (status == -1)

@@ -17,6 +17,7 @@ SRC		=	main.cpp						\
 			nick.cpp						\
 			topic.cpp						\
 			kick.cpp						\
+			capLs.cpp
 
 INC = 		inc								\
 

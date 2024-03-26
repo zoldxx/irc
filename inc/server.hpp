@@ -65,7 +65,7 @@ class Server
     //commandes
 
 		void	handleMessage(int fd);
-		bool	capLs(User client, std::string cmd);
+		bool	capLs(User & client, std::string cmd);
 		bool	nick(User client, std::string cmd);
 		bool	user(User client, std::string cmd);
 		bool	whois(User client, std::string cmd);
@@ -93,9 +93,7 @@ class Server
     	int 		del_user(int i);
     	int 		is_operator(int i, std::string &chan);
 		void 		print_chan(int i);
-		void 		kick_from_a_chan(std::string &user_to_kick, std::string &chan);
-
-
+		void 		kick_from_a_chan(std::string &user_to_kick, std::string &chan, int fd_to_kick);
 
 	//exception
 

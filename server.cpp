@@ -73,7 +73,7 @@ int Server::create_server_socket(int port)
 
 void      		Server::initCommand(void)
 {
-	//_command["CAP"]     = &capLs;
+	_command["CAP"]     = &Server::capLs;
 	//_Command["NICK"]    = &nick;
 	//_Command["USER"]    = &user;
 	//_Command["WHOIS"]   = &whois;
