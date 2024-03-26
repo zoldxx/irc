@@ -33,14 +33,10 @@ void		Server::handleMessage(int i)
 {
 	char			buffer[512];
 	int				fd = _poll_fds[i].fd;
-	int 			bytes_read;
 
 	memset(&buffer, '\0', sizeof(buffer));
-	// if (recv(this->poll_fds[fd].fd, buffer, 4, 0) <= 0)
-	bytes_read = recv(fd, buffer, sizeof(buffer), 0);
-	if (bytes_read <= 0)
+	if (recv(fd, buffer, sizeof(buffer), 0) <= 0)
 	{
-		std::cout << "fd =" << fd << "|handle err = " << strerror(errno) << std::endl;
 		del_user(fd);
         close(this->_poll_fds[fd].fd);
         this->del_from_poll_fds(fd);
@@ -51,65 +47,21 @@ void		Server::handleMessage(int i)
 		std::string					cmd;
 		std::string					tmp;
     	std::string::size_type		end;
-		//std::cout << "buffer =" << buffer << "line =" << line << std::endl;
 		_users.find(fd)->second.setBuffer("");
 		while ((end = line.find("\r\n", 0)) != std::string::npos)
 		{
 			cmd = line.substr(0, end);
 			line.erase(0, end + 2);
-			std::cout << "line =" << line << std::endl;
-			std::cout << "cmd =" << cmd << std::endl;
 			if (cmd.find(" ", 0) != std::string::npos)
 			{
 				tmp = cmd.substr(0, cmd.find(" ", 0));
 				std::cout << "tmp =" << tmp << std::endl;
 				cmd.erase(0, cmd.find(" ", 0) + 1);
 				if (_command.find(tmp) != _command.end())
-					_command.find(tmp)->second(_users.find(fd)->second, cmd);
+					(this->*_command[tmp])(_users.find(fd)->second, cmd);
 			}
 		}
 		if (line.begin() != line.end())
 			_users.find(fd)->second.setBuffer(line);
 	}
 }
-
-// void		Server::handleMessage(int fd)
-// {
-// 	char			buffer[512];
-
-// 	memset(&buffer, '\0', sizeof(buffer));
-// 	std::cout << "handle="<< std::endl;
-// 	// if (recv(this->poll_fds[fd].fd, buffer, 4, 0) <= 0)
-	//if (recv(this->poll_fds[fd].fd, buffer, sizeof(buffer) - 1, MSG_DONTWAIT) <= 0)
-// 	{
-// 		std::cout << "fd =" << fd << "|handle err = " << strerror(errno) << std::endl;
-// 		std::cout << "buffer =" << buffer << std::endl;
-// 		del_user(fd);
-//         close(this->poll_fds[fd].fd);
-//         this->del_from_poll_fds(fd);
-// 	}
-// 	else
-// 	{
-// 		std::string					line = users.find(fd)->second.getBuffer() + buffer;
-// 		std::string					cmd;
-// 		std::string					tmp;
-//     	std::string::size_type		end;
-// 		std::cout << "buffer =" << buffer << "line =" << line << std::endl;
-// 		users.find(fd)->second.setBuffer("");
-// 		while ((end = line.find("\r\n", 0)) != std::string::npos)
-// 		{
-// 			cmd = line.substr(0, end);
-// 			line.erase(0, end + 2);
-// 			std::cout << "line =" << line << std::endl;
-// 			if (cmd.find(" ", 0) != std::string::npos)
-// 			{
-// 				tmp = cmd.substr(0, cmd.find(" ", 0));
-// 				cmd.erase(0, cmd.find(" ", 0) + 1);
-// 				if (_Command.find(tmp) != _Command.end())
-// 					_Command.find(tmp)->second(users.find(fd)->second, cmd);
-// 			}
-// 		}
-// 		if (line.begin() != line.end())
-// 			users.find(fd)->second.setBuffer(line);
-// 	}
-// }
