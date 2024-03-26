@@ -1,4 +1,5 @@
 #include "inc/server.hpp"
+#include "inc/irc.hpp"
 
 // << TOPIC #aaa :fff
 // >> :ggg!uuuuser@localhost TOPIC #aaa :fff
@@ -6,6 +7,35 @@
 //>> :tip!uuuuser@localhost TOPIC #ttt :tooop
 
 //>> :localhost 482 #ttt :You're not channel operator
+
+bool	Server::topic(User client, std::string cmd)
+{
+	int status;
+	std::string serv_msg;
+	std::string chan = extract(cmd, "#", ":");
+	std::string newtopic = extract(cmd, ":", "\0");
+	newtopic.erase(newtopic.size() - 2, 2);
+	if (!_channels[chan].isOperator(client.getFd()))
+	{
+		serv_msg = ":localhost 482 #" + chan + " :You're not channel operator\r\n";
+		status = send(client.getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
+			if (status == -1)
+				std::cout << "[Server] Send error to client fd " << client.getFd() << ": " << strerror(errno) << std::endl;
+		return (1);
+	}
+	serv_msg = ":" + client.getNick() + "!" + client.getUsername() + "@localhost TOPIC #" + chan + " :" + newtopic + "\r\n";
+	for (int j = 1; j < this->get_poll_count(); j++)
+	{	
+		if (_channels[chan].isInChan(client.getFd()))
+        {
+            status = send(_users[j].getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
+            if (status == -1)
+                std::cout << "[Server] Send error to client fd " << _users[j].getFd() << ": " << strerror(errno) << std::endl;
+        }
+	}
+	_channels[chan].setTopic(newtopic);
+	return (1);
+}
 
 // int Server::topic_cmd(int i, char *msg)
 // {

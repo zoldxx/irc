@@ -30,6 +30,7 @@ void read_data_from_socket(int i, struct pollfd **poll_fds, int *poll_count, int
 void add_to_poll_fds(struct pollfd *poll_fds[], int new_fd, int *poll_count, int *poll_size);
 void del_from_poll_fds(struct pollfd **poll_fds, int i, int *poll_count);
 int	 valid_args(std::string port, std::string mdp);
+std::string extract(const std::string& chaine, std::string begin, std::string end);
 
 class	invalid_args :  public std::exception
 {

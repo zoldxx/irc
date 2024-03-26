@@ -1,7 +1,14 @@
 #include "inc/server.hpp"
 
-// << PING bitcoin.uk.eu.dal.net
-// >> :bitcoin.uk.eu.dal.net PONG bitcoin.uk.eu.dal.net :zoldxx
+bool	Server::ping(User client, std::string cmd)
+{
+    int status;
+    std::string serv_msg = "PONG localhost\r\n";
+    status = send(client.getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
+    if (status == -1)
+        std::cout << "[Server] Send error to client " << client.getFd() << strerror(errno) << std::endl;
+    return (1);
+}
 
 
 // int Server::ping(int i, char *msg)

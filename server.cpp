@@ -73,7 +73,7 @@ int Server::create_server_socket(int port)
 
 void      		Server::initCommand(void)
 {
-	//_Command["CAP"]     = &capLs;
+	//_command["CAP"]     = &capLs;
 	//_Command["NICK"]    = &nick;
 	//_Command["USER"]    = &user;
 	//_Command["WHOIS"]   = &whois;
@@ -113,7 +113,7 @@ void	Server::loop(void)
 	        std::cout << "[Server] Waiting..." << std::endl;
 	        continue;
 	    }
-	    for (int i = 0; i < _poll_count; i++) 
+	    for (int i = 0; i < _poll_count; i++)
 	    {
     		if ((_poll_fds[i].revents & POLLIN) != 1)
 	            continue ;
