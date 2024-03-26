@@ -8,8 +8,9 @@
 
 //>> :localhost 482 #ttt :You're not channel operator
 
-bool	Server::topic(User client, std::string cmd)
+bool	Server::topic(User &client, std::string cmd)
 {
+	
 	int status;
 	std::string serv_msg;
 	std::string chan = extract(cmd, "#", ":");

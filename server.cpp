@@ -76,18 +76,18 @@ void      		Server::initCommand(void)
 	_command["CAP"]     = &Server::capLs;
 	_command["NICK"]    = &Server::nick;
 	_command["USER"]    = &Server::user;
-	//_Command["WHOIS"]   = &whois;
+	//_command["WHOIS"]   = &Server::whois;
 	_command["PASS"]    = &Server::pass;
-	//_Command["PING"]    = &ping;
-	//_Command["QUIT"]    = &quit;
-	//_Command["JOIN"]    = &join;
-	//_Command["PRIVMSG"] = &privmsg;
-	//_Command["KICK"]    = &kick;
-	//_Command["TOPIC"]   = &topic;
-	//_Command["MODE"]    = &mode;
-	//_Command["INVITE"]  = &invite;
-	//_Command["PART"]    = &part;
-	//_Command["OPER"]    = &oper;
+	_command["PING"]    = &Server::ping;
+	// _command["QUIT"]    = &Server::quit;
+	_command["JOIN"]    = &Server::join;
+	_command["PRIVMSG"] = &Server::privmsg;
+	// _command["KICK"]    = &Server::kick;
+	// _command["TOPIC"]   = &Server::topic;
+	 _command["MODE"]    = &Server::mode;
+	// _command["INVITE"]  = &Server::invite;
+	// _command["PART"]    = &Server::part;
+	// _command["OPER"]    = &Server::oper;
 }
 
 std::string 	Server::extract(const std::string& chaine, std::string begin, std::string end) 

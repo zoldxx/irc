@@ -1,7 +1,7 @@
 #include "inc/server.hpp"
 #include "inc/irc.hpp"
 
-bool	Server::privmsg(User client, std::string cmd)
+bool	Server::privmsg(User &client, std::string cmd)
 {
     int status;
     std::string msg_str = extract(cmd, ":", "\0");

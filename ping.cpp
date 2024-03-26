@@ -1,7 +1,8 @@
 #include "inc/server.hpp"
 
-bool	Server::ping(User client, std::string cmd)
+bool	Server::ping(User &client, std::string cmd)
 {
+    (void) cmd;
     int status;
     std::string serv_msg = "PONG localhost\r\n";
     status = send(client.getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);

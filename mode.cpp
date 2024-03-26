@@ -4,8 +4,9 @@
 // << MODE zoldxx +i
 // >> :zoldxx MODE zoldxx :+iH
 
-bool	Server::mode(User client, std::string cmd)
+bool	Server::mode(User &client, std::string cmd)
 {
+    (void) cmd;
     int status;
     std::string serv_msg = ":" + client.getNick() + " MODE " + client.getNick() + " :+iH" + "\r\n";
     status = send(client.getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);

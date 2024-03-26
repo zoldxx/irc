@@ -2,6 +2,7 @@
 
 void Server::kick_from_a_chan(std::string &user_to_kick, std::string &chan, int fd_to_kick)
 {
+    (void) user_to_kick;
     std::vector<int>::iterator it = std::find(_channels[chan].getUsers().begin(), _channels[chan].getUsers().end(), fd_to_kick);
     if (it != _channels[chan].getUsers().end())
         _channels[chan].getUsers().erase(it);
@@ -15,7 +16,7 @@ void Server::kick_from_a_chan(std::string &user_to_kick, std::string &chan, int 
         _users[fd_to_kick].getChannels().erase(ite);
 }
 
-bool Server::kick(User client, std::string cmd)
+bool Server::kick(User &client, std::string cmd)
 {
     int status;
     std::string serv_msg;
