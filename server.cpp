@@ -73,11 +73,11 @@ int Server::create_server_socket(int port)
 
 void      		Server::initCommand(void)
 {
-	//_Command["CAP"]     = &capLs;
-	//_Command["NICK"]    = &nick;
-	//_Command["USER"]    = &user;
+	_command["CAP"]     = &Server::capLs;
+	_command["NICK"]    = &Server::nick;
+	_command["USER"]    = &Server::user;
 	//_Command["WHOIS"]   = &whois;
-	//_Command["PASS"]    = &pass;
+	_command["PASS"]    = &Server::pass;
 	//_Command["PING"]    = &ping;
 	//_Command["QUIT"]    = &quit;
 	//_Command["JOIN"]    = &join;

@@ -1,55 +1,62 @@
 #include "inc/server.hpp"
 
-// << NICK zoldxxxx
+bool	Server::is_valid_nick(std::string nick, std::string &msg)
+{
+	if (nick.size() < 1)
+	{
+    	msg = ":" + nick + "!~" + "*@bdtServer 431 " + ": No nickname given\r\n";
+		return (false);
+	}
+	for (std::map<int, User>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		if (it->second.getNick() == nick)
+		{
+    		msg = nick + " is already in use\r\n";
+			return (false);
+		}
+	}
+	for (size_t i = 0; i < nick.size(); ++i)
+	{
+		if (!std::isgraph(nick[i]))
+		{
+    		msg = ":" + nick + "!~" + "*@bdtServer 432 " + ": Erroneous nickname\r\n";
+			return (false);
+		}
+	}
+	return (true);
+}
 
-// int Server::is_valid_str(std::string &str)
-// {
-// 	for (size_t i = 0; i < str.size(); ++i)
-// 	{
-// 		if (!std::isalnum(str[i]))
-// 			return (0);
-// 	}
-// 	return (1);
-// }
-
-
-// int Server::is_valid_nick(std::string &nick)
-// {
-// 	for (std::map<int, User>::iterator it = users.begin(); it != users.end(); ++it)
-// 	{
-// 		if (it->second.nick == nick)
-// 			return (0);
-// 	}
-// 	if (!is_valid_str(nick))
-// 		return (0);
-// 	return (1);
-// }
-
-// int Server::set_nick(int i, char *msg)
-// {
-// 	if (!strncmp(msg, "NICK ", 5))
-// 	{
-// 		std::string serv_msg;
-// 		std::string str_msg = msg;
-// 		std::string new_nick = str_msg.substr(5, std::string::npos);
-// 		new_nick.erase(new_nick.size() - 2, 2);
-// 		if (!is_valid_nick(new_nick))
-// 		{
-//          serv_msg = ":localhost 432 " + new_nick + " :Erroneous nickname\r\n";
-//          status = send(this->users[i].socket_fd, serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
-// 			if (status == -1)
-// 				std::cout << "[Server] Send error to client fd " << this->users[i].socket_fd << ": " << strerror(errno) << std::endl;
-//          return (1);
-// 		}
-// 		serv_msg = ":" + this->users[i].nick + "!~" + this->users[i].username + " NICK :" + new_nick + "\r\n";
-// 		for (int j = 1; j < this->get_poll_count(); j++)
-// 		{
-// 			status = send(this->users[j].socket_fd, serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
-// 			if (status == -1)
-// 				std::cout << "[Server] Send error to client fd " << this->users[j].socket_fd << ": " << strerror(errno) << std::endl;
-// 		}
-// 		this->users[i].nick = new_nick;
-// 		return (1);
-// 	}
-// 	return (0);
-// }
+bool Server::nick(User & client, std::string cmd)
+{
+	std::string					msg("");
+    std::string::size_type		space;
+	if ((space = cmd.find(" ", 0)) != std::string::npos)
+		cmd = cmd.substr(0, space);
+	if (!is_valid_nick(cmd, msg))
+	{
+    	if (send(client.getFd(), msg.c_str(), msg.size(), 0) < 1)
+		{
+			//delete client
+		}
+	   	return (false);
+	}
+	msg = ":" + client.getNick() + " NICK :" + cmd + "\r\n";
+	std::vector<std::string> vec_chan = client.getChannels();
+	if (client.getStatus() == 4)
+	{
+		for (std::vector<std::string>::iterator it = vec_chan.begin(); it != vec_chan.end(); it++)
+		{
+			std::vector<int> vec_user = _channels.find(*it)->second.getUsers();
+			for (std::vector<int>::iterator ite = vec_user.begin(); ite != vec_user.end(); ite++)
+			{
+				if (send(*ite, msg.c_str(), msg.size(), 0) < 1)
+					//delete user *ite 
+					return (false);
+			}
+		}
+	}
+	client.setNick(cmd);
+	if (client.getStatus() == 2)
+		client.setStatus(3);
+	return (true);
+}

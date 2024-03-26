@@ -1,6 +1,9 @@
-#include "inc/irc.hpp"
+#include "inc/server.hpp"
 
-bool	capLs(User client, std::string cmd)
+bool	Server::capLs(User & client, std::string cmd)
 {
+	(void)cmd;
+	if (client.getStatus() == 0) 
+		client.setStatus(1); 
 	return 0;	
 }

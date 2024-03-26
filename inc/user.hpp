@@ -28,6 +28,8 @@ class	User
 		std::string					getUsername(void) const;
 		std::vector<std::string>	getChannels(void) const;
 		int							getFd(void) const;
+		int							getStatus(void) const;
+		void						setStatus(int status);
 		void						setBuffer(std::string buffer);
 		void						setNick(std::string nick);
 		void						setUsername(std::string username);
@@ -40,5 +42,6 @@ class	User
     	std::string 				_username;
     	std::string 				_buffer;
     	int 						_fd;
+    	int 						_status;
 		std::vector<std::string>	_channels;
 };

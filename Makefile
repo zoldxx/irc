@@ -1,20 +1,22 @@
 NAME	=	ircserv
 
 SRC		=	main.cpp						\
+			utils.cpp						\
 			server.cpp						\
-			user.cpp						\
-			channel.cpp						\
 			server_getset.cpp				\
 			server_poll.cpp					\
 			server_exception.cpp			\
 			read_data.cpp					\
-			utils.cpp						\
+			user.cpp						\
+			channel.cpp						\
+			capLs.cpp						\
+			pass.cpp						\
+			nick.cpp						\
+			user_cmd.cpp					\
 			join.cpp						\
 			privmsg.cpp						\
 			ping.cpp						\
-			first_message.cpp				\
 			mode.cpp						\
-			nick.cpp						\
 			topic.cpp						\
 			kick.cpp						\
 
