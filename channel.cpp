@@ -12,22 +12,43 @@ Channel::~Channel(void)
 {
 }
 
-std::string			Channel::getName(void) const
+// std::string			Channel::getName(void) const
+// {
+//     return (_name);
+// }
+
+// std::string			Channel::getTopic(void) const
+// {
+//     return (_topic);
+// }
+
+// std::vector<int>    Channel::getUsers(void) const
+// {
+//     return(_users);
+// }
+
+// std::vector<int>    Channel::getOperators(void) const
+// {
+//     return(_operators);
+// }
+
+std::string			&Channel::getName(void)
 {
     return (_name);
 }
 
-std::string			Channel::getTopic(void) const
+std::string			&Channel::getTopic(void)
 {
     return (_topic);
 }
 
-std::vector<int>    Channel::getUsers(void) const
+
+std::vector<int>    &Channel::getUsers(void)
 {
     return(_users);
 }
 
-std::vector<int>    Channel::getOperators(void) const
+std::vector<int>    &Channel::getOperators(void)
 {
     return(_operators);
 }

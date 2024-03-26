@@ -1,0 +1,111 @@
+<< QUIT :leaving
+<< CAP LS
+<< PASS aaa
+<< NICK tip
+<< USER uuuuser uuuuser localhost :David BERREBY
+>> Password accepted.
+>> :localhost 001 tip :Welcome to bdtServer tip!~uuuuser@127.0.0.1
+<< MODE tip +i
+>> :tip MODE tip :+iH
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< JOIN #ttr
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< QUIT :leaving
+<< CAP LS
+<< PASS aaa
+<< NICK tip
+<< USER uuuuser uuuuser localhost :David BERREBY
+>> Password accepted.
+>> :localhost 001 tip :Welcome to bdtServer tip!~uuuuser@127.0.0.1
+<< MODE tip +i
+>> :tip MODE tip :+iH
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< JOIN #ttt
+>> :tip!~uuuuser JOIN :#ttt
+<< PRIVMSG #ttt :fgn
+<< PRIVMSG #ttt :vfd
+<< PRIVMSG #ttt :vdf
+<< PRIVMSG #ttt :dfv
+<< PRIVMSG #ttt :vdf
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< QUIT :leaving
+<< CAP LS
+<< PASS aaa
+<< NICK tip
+<< USER uuuuser uuuuser localhost :David BERREBY
+>> Password accepted.
+>> :localhost 001 tip :Welcome to bdtServer tip!~uuuuser@127.0.0.1
+<< MODE tip +i
+>> :tip MODE tip :+iH
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< JOIN #ttt
+>> :localhost 403 #ttt :No such channel
+>> :tip!~uuuuser JOIN :#ttt
+>> :localhost 331 tip #ttt :No topic is set
+>> :localhost 353 tip = #ttt :@  
+>> :localhost 366 tip #ttt :End of /NAMES list
+<< MODE #ttt
+>> :tip MODE tip :+iH
+<< PRIVMSG #ttt :fbdb
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< PING localhost
+>> PONG localhost
+--> FAILED mode channel: chanquery abort
+<< MODE #ttt
+--> lag pong
+>> :tip MODE tip :+iH
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< PING localhost
+>> PONG localhost
+--> FAILED mode channel: chanquery abort
+<< WHO #ttt
+--> lag pong
+<< PING localhost
+>> PONG localhost
+--> lag pong
+<< PING localhost
+>> PONG localhost
+--> FAILED who: chanquery abort
+<< WHO #ttt
+--> lag pong
+<< PRIVMSG #ttt : cv
+<< PRIVMSG #ttt :bg
+<< PING localhost
+>> PONG localhost
+--> lag pong
+>> :bbb!~uuuuser JOIN :#ttt
+<< PRIVMSG #ttt :ng
+<< PRIVMSG #ttt :nfg
+<< PING localhost
+>> PONG localhost
+--> FAILED who: chanquery abort
+<< MODE #ttt b
+--> lag pong
+>> :tip MODE tip :+iH
+<< QUIT :leaving

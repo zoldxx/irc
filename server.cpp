@@ -96,7 +96,7 @@ void      		Server::initCommand(void)
 std::string 	Server::extract(const std::string& chaine, std::string begin, std::string end) 
 {
     std::size_t debut = chaine.find(begin);
-    std::size_t fin = chaine.find(end, debut + 1);
+    std::size_t fin = chaine.find(end, debut + 1) - 1;
     if (debut != std::string::npos && fin != std::string::npos) 
         return chaine.substr(debut + 1, fin - debut - 1);
     else 
