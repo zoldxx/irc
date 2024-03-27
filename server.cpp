@@ -82,7 +82,7 @@ void      		Server::initCommand(void)
 	//_command["WHOIS"]   = &Server::whois;
 	_command["PASS"]    = &Server::pass;
 	_command["PING"]    = &Server::ping;
-	// _command["QUIT"]    = &Server::quit;
+	_command["QUIT"]    = &Server::quit;
 	_command["JOIN"]    = &Server::join;
 	_command["PRIVMSG"] = &Server::privmsg;
 	// _command["KICK"]    = &Server::kick;

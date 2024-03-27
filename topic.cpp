@@ -18,6 +18,7 @@ bool	Server::topic(User &client, std::string cmd)
 		serv_msg = ":localhost 482 #" + chan + " :You're not channel operator\r\n";
 		if (send(client.getFd(), serv_msg.c_str(), serv_msg.size(), 0) < 1)
             return (false);
+		return (false);
 	}
 	serv_msg = ":" + client.getNick() + "!" + client.getUsername() + "@localhost TOPIC #" + chan + " :" + newtopic + "\r\n";
 	for (std::vector<int>::iterator it = _channels[chan].getUsers().begin(); it != _channels[chan].getUsers().end(); it++)

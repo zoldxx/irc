@@ -12,24 +12,25 @@ std::string extract(const std::string& chaine, std::string begin, std::string en
 
 int Server::del_user(int i)
 {
-	std::vector<std::string>::iterator 	it;
-	std::vector<int>::iterator 			it_user;
-	std::vector<int>::iterator			it_operators;
-    for (it = this->_users[i].getChannels().begin(); it != this->_users[i].getChannels().end(); it++)
+	// std::vector<std::string>::iterator 	it;
+	// std::vector<int>::iterator 			it_user;
+	// std::vector<int>::iterator			it_operators;
+    for (std::vector<std::string>::iterator it = this->_users[i].getChannels().begin(); it != this->_users[i].getChannels().end(); it++)
     {
-		for (it_user = this->_channels[*it].getUsers().begin() ; it_user != this->_channels[*it].getUsers().end() ; it_user++)
+		//del_from_chan
+		for (std::vector<int>::iterator it_user = this->_channels[(*it)].getUsers().begin() ; it_user != this->_channels[(*it)].getUsers().end() ; it_user++)
 		{
 			if ((*it_user) == i)
 			{
-				this->_channels[*it].getUsers().erase((it_user));
+				this->_channels[(*it)].getUsers().erase((it_user));
 				break ;
 			}
 		}
-		for (it_operators = this->_channels[*it].getOperators().begin() ; it_operators != this->_channels[*it].getOperators().end() ; it_operators++)
+		for (std::vector<int>::iterator it_operators = this->_channels[(*it)].getOperators().begin() ; it_operators != this->_channels[*it].getOperators().end() ; it_operators++)
 		{
 			if ((*it_operators) == i)
 			{
-				this->_channels[*it].getOperators().erase((it_operators));
+				this->_channels[(*it)].getOperators().erase((it_operators));
 				break ;
 			}
 		}
@@ -60,6 +61,7 @@ void		Server::handleMessage(int i)
 		std::string					cmd;
 		std::string					tmp;
     	std::string::size_type		end;
+		std::cout << "buffer= " << buffer << std::endl;
 		_users.find(fd)->second.setBuffer("");
 		while ((end = line.find("\r\n", 0)) != std::string::npos)
 		{

@@ -19,6 +19,7 @@ SRC		=	main.cpp						\
 			mode.cpp						\
 			topic.cpp						\
 			kick.cpp						\
+			quit.cpp						\
 
 INC = 		inc								\
 

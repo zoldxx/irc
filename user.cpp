@@ -37,7 +37,7 @@ std::string		User::getUsername(void) const
 	return _username;
 }
 
-std::vector<std::string>	User::getChannels(void) const
+std::vector<std::string>	&User::getChannels(void)
 {
 	return (_channels);
 }

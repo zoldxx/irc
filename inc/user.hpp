@@ -26,7 +26,7 @@ class	User
 		std::string					getBuffer(void) const;
 		std::string					getNick(void) const;
 		std::string					getUsername(void) const;
-		std::vector<std::string>	getChannels(void) const;
+		std::vector<std::string>	&getChannels(void);
 		int							getFd(void) const;
 		int							getStatus(void) const;
 		void						setStatus(int status);
