@@ -86,7 +86,7 @@ void      		Server::initCommand(void)
 	_command["JOIN"]    = &Server::join;
 	_command["PRIVMSG"] = &Server::privmsg;
 	// _command["KICK"]    = &Server::kick;
-	// _command["TOPIC"]   = &Server::topic;
+	 _command["TOPIC"]   = &Server::topic;
 	 _command["MODE"]    = &Server::mode;
 	// _command["INVITE"]  = &Server::invite;
 	// _command["PART"]    = &Server::part;

@@ -10,29 +10,25 @@
 
 bool	Server::topic(User &client, std::string cmd)
 {
-	
-	int status;
 	std::string serv_msg;
 	std::string chan = extract(cmd, "#", ":");
 	std::string newtopic = extract(cmd, ":", "\0");
-	newtopic.erase(newtopic.size() - 2, 2);
 	if (!_channels[chan].isOperator(client.getFd()))
 	{
 		serv_msg = ":localhost 482 #" + chan + " :You're not channel operator\r\n";
-		status = send(client.getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
-			if (status == -1)
-				std::cout << "[Server] Send error to client fd " << client.getFd() << ": " << strerror(errno) << std::endl;
-		return (1);
+		if (send(client.getFd(), serv_msg.c_str(), serv_msg.size(), 0) < 1)
+            return (false);
 	}
 	serv_msg = ":" + client.getNick() + "!" + client.getUsername() + "@localhost TOPIC #" + chan + " :" + newtopic + "\r\n";
-	for (int j = 1; j < this->get_poll_count(); j++)
-	{	
-		if (_channels[chan].isInChan(_users[j].getFd()))
-        {
-            status = send(_users[j].getFd(), serv_msg.c_str(), strlen(serv_msg.c_str()), 0);
-            if (status == -1)
-                std::cout << "[Server] Send error to client fd " << _users[j].getFd() << ": " << strerror(errno) << std::endl;
-        }
+	for (std::vector<int>::iterator it = _channels[chan].getUsers().begin(); it != _channels[chan].getUsers().end(); it++)
+	{
+		if (send(*it, serv_msg.c_str(), serv_msg.size(), 0) < 1)
+            return (false);
+	}
+	for (std::vector<int>::iterator it = _channels[chan].getOperators().begin(); it != _channels[chan].getOperators().end(); it++)
+	{
+		if (send(*it, serv_msg.c_str(), serv_msg.size(), 0) < 1)
+            return (false);
 	}
 	_channels[chan].setTopic(newtopic);
 	return (1);
