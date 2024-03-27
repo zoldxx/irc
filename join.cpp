@@ -14,24 +14,17 @@ void Server::fill_join_msg(std::string &serv_msg, std::string &channel_name, Use
         for (it = _channels[channel_name].getOperators().begin(); it != _channels[channel_name].getOperators().end(); it++)
             serv_msg += "@" + _users[*it].getNick() + " ";
         for (it = _channels[channel_name].getUsers().begin(); it != _channels[channel_name].getUsers().end(); it++)
-        {
-            serv_msg += _users[*it].getNick();
-            //if (std::next(it) != channels[channel_name].normal_users.end())
-                serv_msg += " ";
-        }
+            serv_msg += _users[*it].getNick() + " ";
     }
     serv_msg += "\r\n:localhost 366 " + client.getNick() + " #" + channel_name + " :End of /NAMES list\r\n";  
 }
 
 bool Server::join(User &client, std::string cmd)
 {
-    // int status;
     std::string serv_msg;
     std::string channel_name = cmd.substr(1, std::string::npos);
-    //channel_name.erase(channel_name.size() - 2, 2);
     
-    // if (_channels[channel_name].getUsers().size() == 0)
-      if (_channels[channel_name].getUsers().size() == 0 && _channels[channel_name].getOperators().size() == 0)
+    if (_channels[channel_name].getUsers().size() == 0 && _channels[channel_name].getOperators().size() == 0)
     {
         serv_msg = ":localhost 403 #" + channel_name + " :No such channel\r\n";
         _channels[channel_name].addOperator(client.getFd());
@@ -41,11 +34,10 @@ bool Server::join(User &client, std::string cmd)
         _channels[channel_name].addUser(client.getFd());
     client.addChannel(channel_name);
     fill_join_msg(serv_msg, channel_name, client);
-    std::cout << "channel name =" << channel_name << "|\nserv message =" << serv_msg;
+    //std::cout << "channel name =" << channel_name << "|\nserv message =" << serv_msg;
     std::string msg_to_send = ":" + client.getNick() + "!~" + client.getUsername() + " JOIN :#" + channel_name + "\r\n";
 
-    std::vector<int> vec_user = _channels[channel_name].getUsers();
-    for (std::vector<int>::iterator ite = vec_user.begin(); ite != vec_user.end(); ite++)
+    for (std::vector<int>::iterator ite = _channels[channel_name].getUsers().begin(); ite != _channels[channel_name].getUsers().end(); ite++)
     {
         if (*ite == client.getFd())
         {
@@ -58,8 +50,7 @@ bool Server::join(User &client, std::string cmd)
                 return (false);
         }
     }
-    std::vector<int> vec_op = _channels[channel_name].getOperators();
-    for (std::vector<int>::iterator ite = vec_op.begin(); ite != vec_op.end(); ite++)
+    for (std::vector<int>::iterator ite = _channels[channel_name].getOperators().begin(); ite != _channels[channel_name].getOperators().end(); ite++)
     {
         if (*ite == client.getFd())
         {

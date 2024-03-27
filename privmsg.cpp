@@ -3,13 +3,10 @@
 
 bool	Server::privmsg(User &client, std::string cmd)
 {
-    // int status;
     std::string msg_str = extract(cmd, ":", "\0");
     std::string channel_name = extract(cmd, "#", ":");
-    std::string msg_to_send = ":" + _users[client.getFd()].getNick() + "!~" + _users[client.getFd()].getUsername() + "@localhost PRIVMSG #" + channel_name + " :" + msg_str;
-    std::cout << "channel name = " << channel_name << "|msg = " << msg_str << "|\n";
-    std::vector<int> vec_user = _channels[channel_name].getUsers();
-    for (std::vector<int>::iterator ite = vec_user.begin(); ite != vec_user.end(); ite++)
+    std::string msg_to_send = ":" + _users[client.getFd()].getNick() + "!~" + _users[client.getFd()].getUsername() + "@localhost PRIVMSG #" + channel_name + " :" + msg_str + "\r\n";
+    for (std::vector<int>::iterator ite = _channels[channel_name].getUsers().begin(); ite != _channels[channel_name].getUsers().end(); ite++)
     {
         if (*ite != client.getFd())
         {
@@ -17,8 +14,7 @@ bool	Server::privmsg(User &client, std::string cmd)
             return (false);
         }
     }
-    std::vector<int> vec_op = _channels[channel_name].getOperators();
-    for (std::vector<int>::iterator ite = vec_op.begin(); ite != vec_op.end(); ite++)
+    for (std::vector<int>::iterator ite = _channels[channel_name].getOperators().begin(); ite != _channels[channel_name].getOperators().end(); ite++)
     {
         if (*ite != client.getFd())
         {
@@ -29,24 +25,6 @@ bool	Server::privmsg(User &client, std::string cmd)
     return (1);
 }
 
-// bool	Server::privmsg(User &client, std::string cmd)
-// {
-//     int status;
-//     std::string msg_str = extract(cmd, ":", "\0");
-//     std::string channel_name = extract(cmd, "#", ":");
-//     std::string msg_to_send = ":" + _users[client.getFd()].getNick() + "!~" + _users[client.getFd()].getUsername() + "@localhost PRIVMSG #" + channel_name + " :" + msg_str;
-//     std::cout << "channel name = " <<channel_name << "|msg = " << msg_str << "|\n";
-//     for (int j = 1; j < this->get_poll_count(); j++)
-//     {
-//         if (_channels[channel_name].isInChan(_users[j].getFd()) && client.getFd() != _users[j].getFd())
-//         {
-//             status = send(_users[j].getFd(), msg_to_send.c_str(), strlen(msg_to_send.c_str()), 0);
-//             if (status == -1)
-//                 std::cout << "[Server] Send error to client fd " << _users[j].getFd() << ": " << strerror(errno) << std::endl;
-//         }
-//     }
-//     return (1);
-// }
 
 // int Server::privmsg(int i, char *msg)
 // {

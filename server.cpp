@@ -86,7 +86,7 @@ void      		Server::initCommand(void)
 	_command["JOIN"]    = &Server::join;
 	_command["PRIVMSG"] = &Server::privmsg;
 	// _command["KICK"]    = &Server::kick;
-	// _command["TOPIC"]   = &Server::topic;
+	 _command["TOPIC"]   = &Server::topic;
 	 _command["MODE"]    = &Server::mode;
 	// _command["INVITE"]  = &Server::invite;
 	// _command["PART"]    = &Server::part;
@@ -123,8 +123,6 @@ void	Server::loop(void)
     		if (this->_poll_fds[i].fd == _server_socket)
 			{
     			int client_fd = accept(_server_socket, NULL, NULL);
-				//std::cout << "fd =" << client_fd << std::endl;
-
     			if (client_fd != -1) 
 				{
     				this->add_to_poll_fds(client_fd);

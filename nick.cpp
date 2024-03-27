@@ -40,19 +40,14 @@ bool Server::nick(User & client, std::string cmd)
 	   	return (false);
 	}
 	msg = ":" + client.getNick() + " NICK :" + cmd + "\r\n";
-	std::vector<std::string> vec_chan = client.getChannels();
 	if (client.getStatus() == 4)
 	{
-		for (std::vector<std::string>::iterator it = vec_chan.begin(); it != vec_chan.end(); it++)
+		for (std::map<int, User>::iterator it = _users.begin(); it != _users.end(); it ++)
 		{
-			std::vector<int> vec_user = _channels.find(*it)->second.getUsers();
-			for (std::vector<int>::iterator ite = vec_user.begin(); ite != vec_user.end(); ite++)
+			if (send(it->second.getFd(), msg.c_str(), msg.size(), 0) < 1)
 			{
-				if (send(*ite, msg.c_str(), msg.size(), 0) < 1)
-				{
-					del_user(*ite);
-					return (false);
-				}
+				del_user(it->first);
+				return (false);
 			}
 		}
 	}
@@ -61,3 +56,38 @@ bool Server::nick(User & client, std::string cmd)
 		client.setStatus(3);
 	return (true);
 }
+
+// bool Server::nick(User & client, std::string cmd)
+// {
+// 	std::string					msg("");
+//     std::string::size_type		space;
+// 	if ((space = cmd.find(" ", 0)) != std::string::npos)
+// 		cmd = cmd.substr(0, space);
+// 	if (!is_valid_nick(cmd, msg))
+// 	{
+//     	if (send(client.getFd(), msg.c_str(), msg.size(), 0) < 1)
+// 		{
+// 			//delete client
+// 		}
+// 	   	return (false);
+// 	}
+// 	msg = ":" + client.getNick() + " NICK :" + cmd + "\r\n";
+// 	std::vector<std::string> vec_chan = client.getChannels();
+// 	if (client.getStatus() == 4)
+// 	{
+// 		for (std::vector<std::string>::iterator it = vec_chan.begin(); it != vec_chan.end(); it++)
+// 		{
+// 			std::vector<int> vec_user = _channels.find(*it)->second.getUsers();
+// 			for (std::vector<int>::iterator ite = vec_user.begin(); ite != vec_user.end(); ite++)
+// 			{
+// 				if (send(*ite, msg.c_str(), msg.size(), 0) < 1)
+// 					//delete user *ite 
+// 					return (false);
+// 			}
+// 		}
+// 	}
+// 	client.setNick(cmd);
+// 	if (client.getStatus() == 2)
+// 		client.setStatus(3);
+// 	return (true);
+// }
