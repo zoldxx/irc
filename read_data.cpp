@@ -61,7 +61,7 @@ void		Server::handleMessage(int i)
 		std::string					cmd;
 		std::string					tmp;
     	std::string::size_type		end;
-		std::cout << "buffer= " << buffer << std::endl;
+		//std::cout << "buffer= " << buffer << std::endl;
 		_users.find(fd)->second.setBuffer("");
 		while ((end = line.find("\r\n", 0)) != std::string::npos)
 		{
