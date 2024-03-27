@@ -73,6 +73,7 @@ class Server
 		bool	join(User & client, std::string cmd);
 		bool	part(User & client, std::string cmd);
 		bool	privmsg(User & client, std::string cmd);
+		bool	privmsg_user(User & client, std::string cmd);
 		bool	topic(User & client, std::string cmd);
 		bool	mode(User & client, std::string cmd);
 		bool	oper(User & client, std::string cmd);
