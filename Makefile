@@ -20,6 +20,7 @@ SRC		=	main.cpp						\
 			topic.cpp						\
 			kick.cpp						\
 			quit.cpp						\
+			invite.cpp						\
 
 INC = 		inc								\
 

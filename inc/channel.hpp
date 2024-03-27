@@ -43,11 +43,11 @@ class	Channel
 
 	private:
 
-    	std::string 		_name;
-    	std::string 		_topic;
-    	std::vector<int> 	_users;
-    	std::vector<int>	_operators;
-
+    	std::string 				_name;
+    	std::string 				_topic;
+    	std::vector<int> 			_users;
+    	std::vector<int>			_operators;
+		std::vector<int>			_whitelist;
 };
 
 
