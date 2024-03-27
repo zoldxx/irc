@@ -55,7 +55,6 @@ void		Server::handleMessage(int i)
 			if (cmd.find(" ", 0) != std::string::npos)
 			{
 				tmp = cmd.substr(0, cmd.find(" ", 0));
-				std::cout << "tmp =" << tmp << std::endl;
 				cmd.erase(0, cmd.find(" ", 0) + 1);
 				if (_command.find(tmp) != _command.end())
 					(this->*_command[tmp])(_users.find(fd)->second, cmd);

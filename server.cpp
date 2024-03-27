@@ -123,8 +123,6 @@ void	Server::loop(void)
     		if (this->_poll_fds[i].fd == _server_socket)
 			{
     			int client_fd = accept(_server_socket, NULL, NULL);
-				//std::cout << "fd =" << client_fd << std::endl;
-
     			if (client_fd != -1) 
 				{
     				this->add_to_poll_fds(client_fd);
