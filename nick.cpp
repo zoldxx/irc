@@ -43,14 +43,6 @@ bool Server::nick(User & client, std::string cmd)
 	std::vector<std::string> vec_chan = client.getChannels();
 	if (client.getStatus() == 4)
 	{
-		// nick_msg = ":" + client.getNick() + "!~" + client.getUsername() + "@127.0.0.1\r\n";
-
- 		// if (send(client.getFd(), nick_msg.c_str(), nick_msg.size(), 0) < 1)
-		// {
-		// 	del_user(client.getFd());
-		// 	return (false);
-		// }
-		// return (true);
 		for (std::vector<std::string>::iterator it = vec_chan.begin(); it != vec_chan.end(); it++)
 		{
 			std::vector<int> vec_user = _channels.find(*it)->second.getUsers();
