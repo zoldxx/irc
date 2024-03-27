@@ -12,20 +12,33 @@ std::string extract(const std::string& chaine, std::string begin, std::string en
 
 int Server::del_user(int i)
 {
-    // for (std::vector<std::string>::iterator it = this->users[i].channels.begin(); it != this->users[i].channels.end(); it++)
-    // {
-    //     std::map<std::string, User>::iterator it_user = this->channels[*it].normal_users.find(this->users[i].nick);
-    //     this->channels[*it].normal_users.erase(it_user);
-    // }
-    // for (std::vector<std::string>::iterator it = this->users[i].channel_operators.begin(); it != this->users[i].channel_operators.end(); it++)
-    // {
-    //     std::map<std::string, User>::iterator it_user = this->channels[*it].operators.find(this->users[i].nick);
-    //     this->channels[*it].operators.erase(it_user);
-    // }
-    // std::map<int, User>::iterator it_user = this->users.find(i);
-    // this->users.erase(it_user);
-    // this->users[i].channel_normal.clear();
-    // this->users[i].channel_operators.clear();
+	std::vector<std::string>::iterator 	it;
+	std::vector<int>::iterator 			it_user;
+	std::vector<int>::iterator			it_operators;
+    for (it = this->_users[i].getChannels().begin(); it != this->_users[i].getChannels().end(); it++)
+    {
+		for (it_user = this->_channels[*it].getUsers().begin() ; it_user != this->_channels[*it].getUsers().end() ; it_user++)
+		{
+			if ((*it_user) == i)
+			{
+				this->_channels[*it].getUsers().erase((it_user));
+				break ;
+			}
+		}
+		for (it_operators = this->_channels[*it].getOperators().begin() ; it_operators != this->_channels[*it].getOperators().end() ; it_operators++)
+		{
+			if ((*it_operators) == i)
+			{
+				this->_channels[*it].getOperators().erase((it_operators));
+				break ;
+			}
+		}
+    }
+    std::map<int, User>::iterator	it_users = this->_users.find(i);
+	close(_users[i].getFd());
+	del_from_poll_fds(_users[i].getFd());
+    this->_users[i].getChannels().clear();
+    this->_users.erase(it_users);
     return (i);
 }
 
