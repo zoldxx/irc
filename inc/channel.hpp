@@ -29,10 +29,11 @@ class	Channel
 		// std::string			getTopic(void) const;
 		// std::vector<int>	getUsers(void) const;
 		// std::vector<int>	getOperators(void) const;
-		std::string			&getName(void) ;
-		std::string			&getTopic(void);
+		std::string			getName(void) const;
+		std::string			getTopic(void) const;
 		std::vector<int>	&getUsers(void);
 		std::vector<int>	&getOperators(void);
+		std::vector<int>	&getWhitelist(void);
 		void				setTopic(std::string topic);
 		bool				isInChan(int fd) const;
 		bool				isOperator(int fd) const;
