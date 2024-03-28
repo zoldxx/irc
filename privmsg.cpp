@@ -1,20 +1,12 @@
 #include "inc/server.hpp"
 #include "inc/irc.hpp"
 
-// << PRIVMSG #ttt :yoo
-// << PRIVMSG bbb :uuu
-//>> :localhost 401 rtetreryery :No such nick/channel
-
-// >> :bbb!localhost PRIVMSG tip :ttt (message de bbb)
-
-
 bool	Server::privmsg_user(User &client, std::string cmd)
 {
     std::string serv_msg;
     std::string receiver = cmd.substr(0, cmd.find(" "));
     std::string msg_str = extract(cmd, ":", "\0");
     int fd_receiver = 0;
-    std::cout << "receiver =" << receiver << "|msg =" << msg_str << "|\n";
     for (std::map<int, User>::iterator it = _users.begin(); it != _users.end(); it++)
     {
         if (it->second.getNick() == receiver)
