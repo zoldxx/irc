@@ -4,7 +4,7 @@ Channel::Channel()
 {
 }
 
-Channel::Channel(std::string name) : _name(name), _topic("")
+Channel::Channel(std::string name) : _m_invit(false), _m_topic(false), _m_maxUser(-1), _m_password(""), _name(name), _topic("")
 {
 }
 

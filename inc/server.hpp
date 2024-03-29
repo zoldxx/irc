@@ -89,6 +89,7 @@ class Server
 		static void	closeServer(int signal);
     	int			is_in_chan(int fd, std::string channel_name);
     	void		fill_join_msg(std::string &serv_msg, std::string &channel_name, User &Client);
+		bool 		send_join_msg(User &client, std::string &channel_name, std::string &serv_msg, std::string &msg_to_send);
 		bool		is_valid_nick(std::string nick, std::string &msg);
     	int 		is_valid_str(std::string &str);
     	int 		del_user(int i);

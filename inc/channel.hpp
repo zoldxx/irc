@@ -40,6 +40,10 @@ class	Channel
 		void				delUser(int user);
 		void				addOperator(int op);
 		void				delOperator(int op);
+		bool                _m_invit;
+        bool                _m_topic;
+		int                 _m_maxUser;
+		std::string         _m_password;
 
 	private:
 
@@ -47,7 +51,10 @@ class	Channel
     	std::string 		_topic;
     	std::vector<int> 	_users;
     	std::vector<int>	_operators;
-
+		// bool                _m_invit;
+        // bool                _m_topic;
+		// int                 _m_maxUser;
+		// std::string         _m_password;
 };
 
 
