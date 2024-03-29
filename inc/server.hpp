@@ -40,7 +40,7 @@ class Server
     	std::map<int, User> 										_users;
     	std::map<std::string, Channel> 								_channels;
 		std::map<std::string, bool (Server::*)(User&, std::string)>	_command;
-		static Server                                          		 *_ptrServer;
+		static Server                                          		*_ptrServer;
 
     public:
 
@@ -61,6 +61,10 @@ class Server
 	    void			read_data_from_socket(int i);
 		void      		initCommand(void);
 		std::string 	extract(const std::string& chaine, std::string begin, std::string end);
+		bool			mode_check_chan(std::vector<std::string> & param, User & client);
+		bool			mode_print_info(User & client, std::string name, Channel & chan);
+		bool			mode_check_option(std::string option, User & client, std::string chan);
+		bool			mode_send_message(int fd, std::string msg);
 
     //commandes
 

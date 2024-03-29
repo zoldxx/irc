@@ -12,9 +12,6 @@ std::string extract(const std::string& chaine, std::string begin, std::string en
 
 int Server::del_user(int i)
 {
-	// std::vector<std::string>::iterator 	it;
-	// std::vector<int>::iterator 			it_user;
-	// std::vector<int>::iterator			it_operators;
     for (std::vector<std::string>::iterator it = this->_users[i].getChannels().begin(); it != this->_users[i].getChannels().end(); it++)
     {
 		//del_from_chan
@@ -61,16 +58,17 @@ void		Server::handleMessage(int i)
 		std::string					cmd;
 		std::string					tmp;
     	std::string::size_type		end;
+    	std::string::size_type		space;
 		std::cout << "buffer= " << buffer << std::endl;
 		_users.find(fd)->second.setBuffer("");
 		while ((end = line.find("\r\n", 0)) != std::string::npos)
 		{
 			cmd = line.substr(0, end);
 			line.erase(0, end + 2);
-			if (cmd.find(" ", 0) != std::string::npos)
+			if ((space = cmd.find(" ", 0)) != std::string::npos)
 			{
-				tmp = cmd.substr(0, cmd.find(" ", 0));
-				cmd.erase(0, cmd.find(" ", 0) + 1);
+				tmp = cmd.substr(0, space);
+				cmd.erase(0, space + 1);
 				if (_command.find(tmp) != _command.end())
 					(this->*_command[tmp])(_users.find(fd)->second, cmd);
 			}

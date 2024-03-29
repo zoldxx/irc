@@ -25,15 +25,19 @@ class	Channel
 		Channel(std::string name);
 		~Channel(void);
 
-		// std::string			getName(void) const;
-		// std::string			getTopic(void) const;
-		// std::vector<int>	getUsers(void) const;
-		// std::vector<int>	getOperators(void) const;
-		std::string			&getName(void) ;
-		std::string			&getTopic(void);
+		bool				getInvit(void) const;
+		bool				getMTopic(void) const;
+		int					getMaxUser(void) const;
+		std::string			getPassword(void) const;
+		std::string			getName(void) const;
+		std::string			getTopic(void) const;
 		std::vector<int>	&getUsers(void);
 		std::vector<int>	&getOperators(void);
 		void				setTopic(std::string topic);
+		void				setMTopic(bool status);
+		void				setInvit(bool status);
+		void				setMaxUser(int limit);
+		void				setPassword(std::string password);
 		bool				isInChan(int fd) const;
 		bool				isOperator(int fd) const;
 		void				addUser(int user);
@@ -47,8 +51,9 @@ class	Channel
     	std::string 		_topic;
     	std::vector<int> 	_users;
     	std::vector<int>	_operators;
+		bool				_m_invit;
+		bool				_m_topic;
+		int					_m_maxUser;
+		std::string			_m_password;
 
 };
-
-
-

@@ -4,7 +4,7 @@ Channel::Channel()
 {
 }
 
-Channel::Channel(std::string name) : _name(name), _topic("")
+Channel::Channel(std::string name) : _name(name), _topic(""), _m_invit(false), _m_topic(false), _m_maxUser(-1), _m_password("")
 {
 }
 
@@ -12,36 +12,35 @@ Channel::~Channel(void)
 {
 }
 
-// std::string			Channel::getName(void) const
-// {
-//     return (_name);
-// }
+std::string		Channel::getPassword(void) const
+{
+    return (_m_password);
+}
 
-// std::string			Channel::getTopic(void) const
-// {
-//     return (_topic);
-// }
+int				Channel::getMaxUser(void) const
+{
+    return (_m_maxUser);
+}
 
-// std::vector<int>    Channel::getUsers(void) const
-// {
-//     return(_users);
-// }
+bool			Channel::getInvit(void) const
+{
+    return (_m_invit);
+}
 
-// std::vector<int>    Channel::getOperators(void) const
-// {
-//     return(_operators);
-// }
+bool			Channel::getMTopic(void) const
+{
+    return (_m_topic);
+}
 
-std::string			&Channel::getName(void)
+std::string		Channel::getName(void) const
 {
     return (_name);
 }
 
-std::string			&Channel::getTopic(void)
+std::string		Channel::getTopic(void) const
 {
     return (_topic);
 }
-
 
 std::vector<int>    &Channel::getUsers(void)
 {
@@ -53,6 +52,26 @@ std::vector<int>    &Channel::getOperators(void)
     return(_operators);
 }
 
+void				Channel::setMTopic(bool status)
+{
+    _m_topic = status;
+}
+
+void				Channel::setInvit(bool status)
+{
+    _m_invit = status;
+}
+
+void				Channel::setMaxUser(int limit)
+{
+    _m_maxUser = limit;
+}
+
+void				Channel::setPassword(std::string password)
+{
+    _m_password = password;
+}
+
 void				Channel::setTopic(std::string topic)
 {
     _topic = topic;
@@ -60,7 +79,8 @@ void				Channel::setTopic(std::string topic)
 
 bool 			Channel::isInChan(int fd) const
 {
-    if (std::find(this->_users.begin(), this->_users.end(), fd) != _users.end())
+    if (std::find(this->_users.begin(), this->_users.end(), fd) != _users.end()
+            || std::find(this->_operators.begin(), this->_operators.end(), fd) != _operators.end())
         return (true);
     
     return (false);

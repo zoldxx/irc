@@ -51,21 +51,16 @@ int Server::create_server_socket(int port)
 {
     struct sockaddr_in sa;
     int socket_fd;
-    int status;
 
     memset(&sa, 0, sizeof sa);
-    sa.sin_family = AF_INET; // IPv4
-    sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK); // 127.0.0.1, localhost
+    sa.sin_family = AF_INET;
+    sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
     sa.sin_port = htons(port);
 
-    // Création de la socket
     socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
     if (socket_fd == -1)
 		throw init_failed();
-
-    // Liaison de la socket à l'adresse et au port
-    status = bind(socket_fd, (struct sockaddr *)&sa, sizeof sa);
-    if (status != 0)
+	if (bind(socket_fd, (struct sockaddr *)&sa, sizeof sa) != 0)
 	{
 		close(socket_fd);
 		throw init_failed();
@@ -79,18 +74,18 @@ void      		Server::initCommand(void)
 	_command["CAP"]     = &Server::capLs;
 	_command["NICK"]    = &Server::nick;
 	_command["USER"]    = &Server::user;
-	//_command["WHOIS"]   = &Server::whois;
 	_command["PASS"]    = &Server::pass;
 	_command["PING"]    = &Server::ping;
 	_command["QUIT"]    = &Server::quit;
 	_command["JOIN"]    = &Server::join;
 	_command["PRIVMSG"] = &Server::privmsg;
-	// _command["KICK"]    = &Server::kick;
-	 _command["TOPIC"]   = &Server::topic;
-	 _command["MODE"]    = &Server::mode;
-	// _command["INVITE"]  = &Server::invite;
-	// _command["PART"]    = &Server::part;
-	// _command["OPER"]    = &Server::oper;
+	_command["TOPIC"]   = &Server::topic;
+	_command["MODE"]    = &Server::mode;
+	//_command["WHOIS"]   = &Server::whois;
+	//_command["KICK"]    = &Server::kick;
+	//_command["INVITE"]  = &Server::invite;
+	//_command["PART"]    = &Server::part;
+	//_command["OPER"]    = &Server::oper;
 }
 
 std::string 	Server::extract(const std::string& chaine, std::string begin, std::string end) 
