@@ -12,7 +12,6 @@ bool	Server::initNickAndChan(std::string &nick, std::string &channel, User &clie
 	{
 		if (nick[0] != '#')
 		{
-			std::cout << "HERE 1" << std::endl;
 			msg = ":localhost 401 " + client.getNick() + " " + channel + " :No such nick/channel\r\n";
 			if (send(client.getFd(), msg.c_str(), msg.size(), 0) < 1)
 			{
@@ -24,7 +23,6 @@ bool	Server::initNickAndChan(std::string &nick, std::string &channel, User &clie
 		else
 			std::swap(nick, channel);
 	}
-	std::cout << "HERE 2" << std::endl;
 	channel = channel.erase(0, 1);
 	return true;
 }
@@ -40,7 +38,6 @@ bool	Server::checkGuest(std::map<int, User>::iterator &it_guest, User & client, 
 	}
 	if (it_guest == _users.end())
 	{
-		std::cout << "HERE 3" << std::endl;
 		msg = ":localhost 401 " + client.getNick() + " " + channel + " :No such nick/channel\r\n";
 		if (send(client.getFd(), msg.c_str(), msg.size(), 0) < 1)
 		{
@@ -49,7 +46,6 @@ bool	Server::checkGuest(std::map<int, User>::iterator &it_guest, User & client, 
 		}
 		return false;
 	}
-	std::cout << "HERE 4" << std::endl;
 	return true;
 }
 
@@ -129,10 +125,7 @@ bool	Server::invite(User & client, std::string cmd)
 		{
 			msg = ":localhost 443 " + client.getNick() + " " + it_guest->second.getNick() + " :#" + channel + " :is already on channel\r\n";
 			if (send(client.getFd(), msg.c_str(), msg.size(), 0) < 1)
-			{
 				del_user(client.getFd());
-				return false;
-			}
 			return false;
 		}
 	}
