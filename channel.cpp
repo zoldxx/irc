@@ -1,6 +1,10 @@
 #include "inc/channel.hpp"
 
-Channel::Channel()
+// Channel::Channel()
+// {
+// }
+
+Channel::Channel() : _m_invit(false), _m_topic(false), _m_maxUser(-1), _m_password(""), _topic("")
 {
 }
 
@@ -11,26 +15,6 @@ Channel::Channel(std::string name) : _m_invit(false), _m_topic(false), _m_maxUse
 Channel::~Channel(void)
 {
 }
-
-// std::string			Channel::getName(void) const
-// {
-//     return (_name);
-// }
-
-// std::string			Channel::getTopic(void) const
-// {
-//     return (_topic);
-// }
-
-// std::vector<int>    Channel::getUsers(void) const
-// {
-//     return(_users);
-// }
-
-// std::vector<int>    Channel::getOperators(void) const
-// {
-//     return(_operators);
-// }
 
 std::string			Channel::getName(void) const
 {

@@ -50,42 +50,106 @@ bool Server::send_join_msg(User &client, std::string &channel_name, std::string 
     return (true);
 }
 
-//room full = >> :atw.hu.eu.dal.net 471 gdgergg #rommtest :Cannot join channel (+l)
-
-bool Server::join(User &client, std::string cmd)
+bool Server::check_join_mode(User &client, std::string &channel_name, std::string &mdp)
 {
     std::string serv_msg;
-    std::string channel_name = cmd.substr(1, std::string::npos);
-
-    if (_channels[channel_name]._m_maxUser != -1 && (_channels[channel_name].getOperators().size() + _channels[channel_name].getUsers().size())  >= _channels[channel_name]._m_maxUser)
+    if (_channels[channel_name]._m_maxUser != -1 && (int)(_channels[channel_name].getOperators().size() + _channels[channel_name].getUsers().size())  >= _channels[channel_name]._m_maxUser)
     {
         serv_msg = ":localhost 471 " + client.getNick() + " #" + channel_name + " :Cannot join channel (+l)\r\n";
         if (send(client.getFd(), serv_msg.c_str(), serv_msg.size(), 0) < 1)
             return (false);
-        return (false)
+        return (false);
     }
-    //if (_channels[channel_name]._m_invit == true && cl)
+    if (_channels[channel_name]._m_invit == true && std::find(_channels[channel_name].getWhitelist().begin(), 
+        _channels[channel_name].getWhitelist().end(), client.getFd()) == _channels[channel_name].getWhitelist().end())
+    {
+        serv_msg = ":localhost 473 " + client.getNick() + " #" + channel_name + " :Cannot join channel (+i)\r\n";
+        if (send(client.getFd(), serv_msg.c_str(), serv_msg.size(), 0) < 1)
+            return (false);
+        return (false);
+    }
+    if (_channels[channel_name]._m_password != "" && _channels[channel_name]._m_password != mdp)
+    {
+        serv_msg = ":localhost 475 " + client.getNick() + " #" + channel_name + " :Cannot join channel (+k)\r\n";
+        if (send(client.getFd(), serv_msg.c_str(), serv_msg.size(), 0) < 1)
+            return (false);
+        return (false);
+    }
+    return (true);
+}
 
-    if (_channels[channel_name]._m_invit == 1 && _channels[channel_name]._m_maxUser == 8
-        && _channels[channel_name]._m_topic == 1 && _channels[channel_name]._m_password == "yo")
-        return (1);
-    
+bool Server::join(User &client, std::string cmd)
+{
+    std::string serv_msg;
+    std::string channel_name;
+    std::string mdp = "";
+    size_t sep = cmd.find(" ");
+    if (sep == std::string::npos)
+        channel_name = cmd.substr(1, std::string::npos);
+    else
+    {
+        channel_name = cmd.substr(1, sep - 1);
+        mdp = cmd.substr(sep + 1, std::string::npos);
+    }
+    if (check_join_mode(client, channel_name, mdp) == false)
+        return (false);
     if (_channels[channel_name].getUsers().size() == 0 && _channels[channel_name].getOperators().size() == 0)
     {
         serv_msg = ":localhost 403 #" + channel_name + " :No such channel\r\n";
         _channels[channel_name].addOperator(client.getFd());
-        //_channels[channel_name].getOperators().push_back(client.getFd());
     }
     else
         _channels[channel_name].addUser(client.getFd());
     client.addChannel(channel_name);
     fill_join_msg(serv_msg, channel_name, client);
-    //std::cout << "channel name =" << channel_name << "|\nserv message =" << serv_msg;
     std::string msg_to_send = ":" + client.getNick() + "!~" + client.getUsername() + " JOIN :#" + channel_name + "\r\n";
     if (send_join_msg(client, channel_name, serv_msg, msg_to_send) == false)
         return (false);
     return (0);
 }
+
+// bool Server::join(User &client, std::string cmd)
+// {
+//     std::string serv_msg;
+//     std::string channel_name = cmd.substr(1, std::string::npos);
+
+//     if (_channels[channel_name]._m_maxUser != -1 && (_channels[channel_name].getOperators().size() + _channels[channel_name].getUsers().size())  >= _channels[channel_name]._m_maxUser)
+//     {
+//         serv_msg = ":localhost 471 " + client.getNick() + " #" + channel_name + " :Cannot join channel (+l)\r\n";
+//         if (send(client.getFd(), serv_msg.c_str(), serv_msg.size(), 0) < 1)
+//             return (false);
+//         return (false);
+//     }
+//     if (_channels[channel_name]._m_invit == true && std::find(_channels[channel_name].getWhitelist().begin(), 
+//         _channels[channel_name].getWhitelist().end(), client.getFd()) == _channels[channel_name].getWhitelist().end())
+//     {
+//         serv_msg = ":localhost 473 " + client.getNick() + " #" + channel_name + " :Cannot join channel (+i)\r\n";
+//         if (send(client.getFd(), serv_msg.c_str(), serv_msg.size(), 0) < 1)
+//             return (false);
+//         return (false);
+//     }
+
+
+//     // if (_channels[channel_name]._m_invit == 1 && _channels[channel_name]._m_maxUser == 8
+//     //     && _channels[channel_name]._m_topic == 1 && _channels[channel_name]._m_password == "yo")
+//     //     return (1);
+    
+//     if (_channels[channel_name].getUsers().size() == 0 && _channels[channel_name].getOperators().size() == 0)
+//     {
+//         serv_msg = ":localhost 403 #" + channel_name + " :No such channel\r\n";
+//         _channels[channel_name].addOperator(client.getFd());
+//         //_channels[channel_name].getOperators().push_back(client.getFd());
+//     }
+//     else
+//         _channels[channel_name].addUser(client.getFd());
+//     client.addChannel(channel_name);
+//     fill_join_msg(serv_msg, channel_name, client);
+//     //std::cout << "channel name =" << channel_name << "|\nserv message =" << serv_msg;
+//     std::string msg_to_send = ":" + client.getNick() + "!~" + client.getUsername() + " JOIN :#" + channel_name + "\r\n";
+//     if (send_join_msg(client, channel_name, serv_msg, msg_to_send) == false)
+//         return (false);
+//     return (0);
+// }
 
 // bool Server::join(User &client, std::string cmd)
 // {
