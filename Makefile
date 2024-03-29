@@ -21,6 +21,7 @@ SRC		=	main.cpp						\
 			kick.cpp						\
 			quit.cpp						\
 			invite.cpp						\
+			part.cpp						\
 
 INC = 		inc								\
 

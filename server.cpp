@@ -88,7 +88,7 @@ void      		Server::initCommand(void)
 	_command["TOPIC"]   = &Server::topic;
 	_command["MODE"]    = &Server::mode;
 	_command["INVITE"]  = &Server::invite;
-	// _command["PART"]    = &Server::part;
+	_command["PART"]    = &Server::part;
 	// _command["OPER"]    = &Server::oper;
 }
 
