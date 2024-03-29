@@ -1,6 +1,6 @@
 #include "inc/channel.hpp"
 
-Channel::Channel()
+Channel::Channel() : _topic(""), _m_invit(false), _m_topic(false), _m_maxUser(-1), _m_password("")
 {
 }
 
@@ -70,6 +70,11 @@ void				Channel::setMaxUser(int limit)
 void				Channel::setPassword(std::string password)
 {
     _m_password = password;
+}
+
+std::vector<int>    &Channel::getWhitelist(void)
+{
+    return(_whitelist);
 }
 
 void				Channel::setTopic(std::string topic)

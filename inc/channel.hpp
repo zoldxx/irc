@@ -33,6 +33,7 @@ class	Channel
 		std::string			getTopic(void) const;
 		std::vector<int>	&getUsers(void);
 		std::vector<int>	&getOperators(void);
+		std::vector<int>	&getWhitelist(void);
 		void				setTopic(std::string topic);
 		void				setMTopic(bool status);
 		void				setInvit(bool status);
@@ -47,13 +48,13 @@ class	Channel
 
 	private:
 
-    	std::string 		_name;
-    	std::string 		_topic;
-    	std::vector<int> 	_users;
-    	std::vector<int>	_operators;
-		bool				_m_invit;
-		bool				_m_topic;
-		int					_m_maxUser;
-		std::string			_m_password;
-
+    	std::string 				_name;
+    	std::string 				_topic;
+    	std::vector<int> 			_users;
+    	std::vector<int>			_operators;
+		std::vector<int>			_whitelist;
+		bool						_m_invit;
+		bool						_m_topic;
+		int							_m_maxUser;
+		std::string					_m_password;
 };

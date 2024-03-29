@@ -13,3 +13,4 @@ cap ls password nickname username
 
 
 
+pour nick -> user qui s'appelle finf essaye de faire /nick finf recoit un msg mick already use alors qu'il devrait rien recevoir

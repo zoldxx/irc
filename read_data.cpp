@@ -59,7 +59,8 @@ void		Server::handleMessage(int i)
 		std::string					tmp;
     	std::string::size_type		end;
     	std::string::size_type		space;
-		std::cout << "buffer= " << buffer << std::endl;
+		
+		//std::cout <<  "line =" << line << "|buffer= " << buffer << "|";
 		_users.find(fd)->second.setBuffer("");
 		while ((end = line.find("\r\n", 0)) != std::string::npos)
 		{
