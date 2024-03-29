@@ -73,6 +73,7 @@ class Server
 		bool	join(User & client, std::string cmd);
 		bool	part(User & client, std::string cmd);
 		bool	privmsg(User & client, std::string cmd);
+		bool	privmsg_user(User & client, std::string cmd);
 		bool	topic(User & client, std::string cmd);
 		bool	mode(User & client, std::string cmd);
 		bool	oper(User & client, std::string cmd);
@@ -93,7 +94,7 @@ class Server
     	int 		del_user(int i);
     	int 		is_operator(int i, std::string &chan);
 		void 		print_chan(int i);
-		void 		kick_from_a_chan(std::string &user_to_kick, std::string &chan, int fd_to_kick);
+		void 		kick_from_a_chan(std::string &chan, int fd_to_kick);
 		bool		initNickAndChan(std::string &nick, std::string &channel, User & client, std::string cmd);
 		bool		checkGuest(std::map<int, User>::iterator &it_guest, User & client, std::string &nick, std::string &channel);
 		void		addToWhitelist(std::map<std::string, Channel>::iterator &it_channel,
