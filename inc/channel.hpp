@@ -29,10 +29,11 @@ class	Channel
 		// std::string			getTopic(void) const;
 		// std::vector<int>	getUsers(void) const;
 		// std::vector<int>	getOperators(void) const;
-		std::string			&getName(void) ;
-		std::string			&getTopic(void);
+		std::string			getName(void) const;
+		std::string			getTopic(void) const;
 		std::vector<int>	&getUsers(void);
 		std::vector<int>	&getOperators(void);
+		std::vector<int>	&getWhitelist(void);
 		void				setTopic(std::string topic);
 		bool				isInChan(int fd) const;
 		bool				isOperator(int fd) const;
@@ -47,14 +48,11 @@ class	Channel
 
 	private:
 
-    	std::string 		_name;
-    	std::string 		_topic;
-    	std::vector<int> 	_users;
-    	std::vector<int>	_operators;
-		// bool                _m_invit;
-        // bool                _m_topic;
-		// int                 _m_maxUser;
-		// std::string         _m_password;
+    	std::string 				_name;
+    	std::string 				_topic;
+    	std::vector<int> 			_users;
+    	std::vector<int>			_operators;
+		std::vector<int>			_whitelist;
 };
 
 

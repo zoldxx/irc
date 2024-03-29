@@ -32,12 +32,12 @@ Channel::~Channel(void)
 //     return(_operators);
 // }
 
-std::string			&Channel::getName(void)
+std::string			Channel::getName(void) const
 {
     return (_name);
 }
 
-std::string			&Channel::getTopic(void)
+std::string			Channel::getTopic(void) const
 {
     return (_topic);
 }
@@ -51,6 +51,11 @@ std::vector<int>    &Channel::getUsers(void)
 std::vector<int>    &Channel::getOperators(void)
 {
     return(_operators);
+}
+
+std::vector<int>    &Channel::getWhitelist(void)
+{
+    return(_whitelist);
 }
 
 void				Channel::setTopic(std::string topic)

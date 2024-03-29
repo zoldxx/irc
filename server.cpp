@@ -70,7 +70,6 @@ int Server::create_server_socket(int port)
 		close(socket_fd);
 		throw init_failed();
 	}
-
     return (socket_fd);
 }
 
@@ -85,10 +84,10 @@ void      		Server::initCommand(void)
 	_command["QUIT"]    = &Server::quit;
 	_command["JOIN"]    = &Server::join;
 	_command["PRIVMSG"] = &Server::privmsg;
-	 _command["KICK"]    = &Server::kick;
-	 _command["TOPIC"]   = &Server::topic;
-	 _command["MODE"]    = &Server::mode;
-	// _command["INVITE"]  = &Server::invite;
+	// _command["KICK"]    = &Server::kick;
+	_command["TOPIC"]   = &Server::topic;
+	_command["MODE"]    = &Server::mode;
+	_command["INVITE"]  = &Server::invite;
 	// _command["PART"]    = &Server::part;
 	// _command["OPER"]    = &Server::oper;
 }
