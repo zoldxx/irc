@@ -53,14 +53,14 @@ bool Server::send_join_msg(User &client, std::string &channel_name, std::string 
 bool Server::check_join_mode(User &client, std::string &channel_name, std::string &mdp)
 {
     std::string serv_msg;
-    if (_channels[channel_name]._m_maxUser != -1 && (int)(_channels[channel_name].getOperators().size() + _channels[channel_name].getUsers().size())  >= _channels[channel_name]._m_maxUser)
+    if (_channels[channel_name].getMaxUser() != -1 && (int)(_channels[channel_name].getOperators().size() + _channels[channel_name].getUsers().size())  >= _channels[channel_name].getMaxUser())
     {
         serv_msg = ":localhost 471 " + client.getNick() + " #" + channel_name + " :Cannot join channel (+l)\r\n";
         if (send(client.getFd(), serv_msg.c_str(), serv_msg.size(), 0) < 1)
             return (false);
         return (false);
     }
-    if (_channels[channel_name]._m_invit == true && std::find(_channels[channel_name].getWhitelist().begin(), 
+    if (_channels[channel_name].getInvit() == true && std::find(_channels[channel_name].getWhitelist().begin(), 
         _channels[channel_name].getWhitelist().end(), client.getFd()) == _channels[channel_name].getWhitelist().end())
     {
         serv_msg = ":localhost 473 " + client.getNick() + " #" + channel_name + " :Cannot join channel (+i)\r\n";
@@ -68,7 +68,7 @@ bool Server::check_join_mode(User &client, std::string &channel_name, std::strin
             return (false);
         return (false);
     }
-    if (_channels[channel_name]._m_password != "" && _channels[channel_name]._m_password != mdp)
+    if (_channels[channel_name].getPassword() != "" && _channels[channel_name].getPassword() != mdp)
     {
         serv_msg = ":localhost 475 " + client.getNick() + " #" + channel_name + " :Cannot join channel (+k)\r\n";
         if (send(client.getFd(), serv_msg.c_str(), serv_msg.size(), 0) < 1)
