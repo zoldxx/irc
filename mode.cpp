@@ -4,8 +4,7 @@ bool	Server::mode_send_message(int fd, std::string msg)
 {
 	if (send(fd, msg.c_str(), msg.size(), 0) < 1)
 	{
-	    close(fd);
-	    del_from_poll_fds(fd);
+		del_user(fd);
 		return (false);
 	}
 	return (true);
@@ -17,9 +16,9 @@ bool	Server::mode_check_chan(std::vector<std::string> & param, User & client)
 
 	if (param[0] == client.getNick())
 		return (false);
-	if (param[0].size() < 2 || param[0][0] != '#' || _channels.find(param[0].substr(1, param[0].size() - 1)) != _channels.end())
+	if (param[0].size() < 2 || param[0][0] != '#' || _channels.find(param[0].substr(1, param[0].size())) == _channels.end())
 	{
-		mode_send_message(client.getFd(), ":localhost 403 " + client.getNick() + " " + param[0] + " :No such channel");
+		mode_send_message(client.getFd(), ":localhost 403 " + client.getNick() + " " + param[0] + " :No such channel\r\n");
 		return (false);
 	}
 	param[0].erase(0, 1);
@@ -48,6 +47,7 @@ bool	Server::mode_print_info(User & client, std::string name, Channel &chan)
 	}
 	if (chan.getPassword() != "")
 		msg += " " + chan.getPassword();
+	msg += "\r\n";
 	if (mode_send_message(client.getFd(), msg) == false)
 		return (false);
 	return (true);
@@ -78,10 +78,49 @@ bool	Server::mode_check_option(std::string option, User & client, std::string ch
 	}
 	if (i > 1 || o > 1 || t > 1 || l > 1 || k > 1)
 	{
-		if (mode_send_message(client.getFd(), ":localhost " + client.getNick() + " " + chan + " :Syntax error in the option") == false)
-			return (false);
+		mode_send_message(client.getFd(), ":localhost " + client.getNick() + " " + chan + " :Syntax error in the option\r\n");
+		return (false);
 	}
 	return (true);
+}
+
+void	Server::mode_set_message(std::string & msg, std::string & res, char c, bool type, std::vector<std::string> &param)
+{
+	(void)res;
+	(void)c;
+	(void)param;
+	if (*msg.rbegin() == ' ')
+	{
+		if (type == true)
+			msg += "+";
+		else
+			msg += "-";
+	}
+	else
+	{
+		if (type == true)
+		{
+			if (msg.rfind("-") != std::string::npos)
+			{
+				if (msg.rfind("+") == std::string::npos || (msg.rfind("+") != std::string::npos && msg.rfind("+") < msg.rfind("-")))
+					msg += "+";
+			}
+		}
+		else
+		{
+			if (msg.rfind("+") != std::string::npos)
+			{
+				if (msg.rfind("-") == std::string::npos || (msg.rfind("-") != std::string::npos && msg.rfind("-") < msg.rfind("+")))
+					msg += "-";
+			}
+		}
+	}
+	if (c == 'o' || c == 'k' || (c == 'l' && type == true))
+	{
+		res += " " + param[2];
+		param.erase(param.begin() + 2);
+	}
+	msg += c;
 }
 
 bool	Server::mode(User &client, std::string cmd)
@@ -102,14 +141,13 @@ bool	Server::mode(User &client, std::string cmd)
 		cmd.erase(0, end + 1);
 	}
 	param.push_back(cmd);
-	msg = ":" + client.getUsername() + "!~" + client.getNick() + "@127.0.0.1.ip MODE #" + param[0] + " ";
+	msg = ":" + client.getUsername() + "!~" + client.getNick() + "@127.0.0.1.ip MODE " + param[0] + " ";
 	if (mode_check_chan(param, client) == false)
 		return (false);	
 	else
 		chan = &_channels[param[0]];
 	if (param.size() == 1)
 		return (mode_print_info(client, param[0], *chan));
-	param.erase(param.begin());
 	if (mode_check_option(param[1], client, param[0]) == false)
 		return (false);
 	for (std::string::iterator ite = param[1].begin(); ite != param[1].end() ; ite++)
@@ -127,21 +165,21 @@ bool	Server::mode(User &client, std::string cmd)
 						chan->setInvit(true);
 					else
 						chan->setInvit(false);
+					mode_set_message(msg, res, 'i', type, param);
 					break;
 				case 1:
 					if (type == true)
 						chan->setMTopic(true);
 					else
 						chan->setMTopic(false);
+					mode_set_message(msg, res, 't', type, param);
 					break;
 				case 2:
 					if (type == true)
-					{
 						chan->setPassword(param[2]);
-						param.erase(param.begin() + 2);
-					}
 					else
 						chan->setPassword("");
+					mode_set_message(msg, res, 'k', type, param);
 					break;
 				case 3:
 					if (type == true)
@@ -158,11 +196,10 @@ bool	Server::mode(User &client, std::string cmd)
 									return (false);
 							}
 						}
-						param.erase(param.begin() + 2);
-						break;
 					}
 					else
 						chan->setMaxUser(-1);
+					mode_set_message(msg, res, 'l', type, param);
 					break;
 				case 4:
 					while (iter != _users.end())
@@ -196,6 +233,7 @@ bool	Server::mode(User &client, std::string cmd)
 							chan->delOperator(iter->second.getFd());
 						}
 					}
+					mode_set_message(msg, res, 'o', type, param);
 					break;
 					
 			}
@@ -206,5 +244,10 @@ bool	Server::mode(User &client, std::string cmd)
 				return (false);
 		}
 	}
+	msg += res + "\r\n";
+    for (std::vector<int>::iterator ite = chan->getUsers().begin(); ite != chan->getUsers().end(); ite++)
+			mode_send_message(*ite, msg);
+    for (std::vector<int>::iterator ite = chan->getOperators().begin(); ite != chan->getOperators().end(); ite++)
+			mode_send_message(*ite, msg);
     return (true);
 }
