@@ -65,6 +65,7 @@ class Server
 		bool			mode_print_info(User & client, std::string name, Channel & chan);
 		bool			mode_check_option(std::string option, User & client, std::string chan);
 		bool			mode_send_message(int fd, std::string msg);
+		void			mode_set_message(std::string & msg, std::string & res, char c, bool type, std::vector<std::string> & param);
 
     //commandes
 

@@ -11,7 +11,7 @@ bool	Server::is_valid_nick(std::string nick, std::string &msg)
 	{
 		if (it->second.getNick() == nick)
 		{
-    		msg = nick + " is already in use\r\n";
+    		msg = ":localhost 433 * " + nick + " :Nickname is already in use.\r\n";
 			return (false);
 		}
 	}
