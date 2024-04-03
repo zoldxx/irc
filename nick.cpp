@@ -11,7 +11,7 @@ bool	Server::is_valid_nick(std::string nick, std::string &msg)
 	{
 		if (it->second.getNick() == nick)
 		{
-    		msg = ":127.0.0.1 433 * " + nick + " :Nickname is already in use.\r\n";
+    		msg = ":localhost 433 * " + nick + " :Nickname is already in use.\r\n";
 			return (false);
 		}
 	}
@@ -38,8 +38,8 @@ bool Server::nick(User & client, std::string cmd)
 		cmd = cmd.substr(0, space);
 	if (!is_valid_nick(cmd, msg))
 	{
-		std::cout << msg << std::endl;
-    	send(client.getFd(), msg.c_str(), msg.size(), 0);
+    	if (send(client.getFd(), msg.c_str(), msg.size(), 0) < 1)
+			del_user(client.getFd());
 	   	return (false);
 	}
 	msg = ":" + client.getNick() + " NICK :" + cmd + "\r\n";
@@ -57,5 +57,15 @@ bool Server::nick(User & client, std::string cmd)
 	client.setNick(cmd);
 	if (client.getStatus() == 2)
 		client.setStatus(3);
+	if (client.getUsername() != "")
+	{
+		msg = ":localhost 001 " + client.getNick() + " :Welcome to bdtServer " + client.getNick() + "!~" + client.getUsername() + "@127.0.0.1\r\n";
+ 		if (send(client.getFd(), msg.c_str(), msg.size(), 0) < 1)
+		{
+			del_user(client.getFd());
+			return (false);
+		}
+		client.setStatus(4);
+	}
 	return (true);
 }

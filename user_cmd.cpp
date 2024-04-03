@@ -21,9 +21,5 @@ bool Server::user(User & client, std::string cmd)
 		}
 		return (true);
 	}
-	else
-	{
-		del_user(client.getFd());
-		return (false);
-	}
+	return (false);
 }
