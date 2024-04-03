@@ -54,7 +54,7 @@ int Server::create_server_socket(int port)
 
     memset(&sa, 0, sizeof sa);
     sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    sa.sin_addr.s_addr = htonl(INADDR_ANY);
     sa.sin_port = htons(port);
 
     socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
@@ -105,10 +105,7 @@ void	Server::loop(void)
 	    if (status == -1)
 	        return;
 	    else if (status == 0)
-	    {
-	        std::cout << "[Server] Waiting..." << std::endl;
 	        continue;
-	    }
 	    for (int i = 0; i < _poll_count; i++)
 	    {
     		if ((_poll_fds[i].revents & POLLIN) != 1)

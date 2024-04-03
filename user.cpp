@@ -1,10 +1,10 @@
 #include "inc/irc.hpp"
 
-User::User()
+User::User() : _username("")
 {
 }
 
-User::User(int fd) : _fd(fd) , _status(0)
+User::User(int fd) : _username(""), _fd(fd) , _status(0)
 {
 }
 
