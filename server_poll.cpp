@@ -40,6 +40,12 @@ void Server::add_to_poll_fds(int new_fd)
 
 void Server::del_from_poll_fds(int i)
 {
-    this->_poll_fds[i] = this->_poll_fds[this->_poll_count - 1];
-    this->_poll_count -= 1;
+    for (int j = 0; j < _poll_count; j++)
+	{
+        if (_poll_fds[j].fd == i)
+        {
+            this->_poll_fds[j] = this->_poll_fds[this->_poll_count - 1];
+            this->_poll_count -= 1;
+        }
+    }
 }

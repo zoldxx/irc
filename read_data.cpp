@@ -14,7 +14,6 @@ int Server::del_user(int i)
 {
     for (std::vector<std::string>::iterator it = this->_users[i].getChannels().begin(); it != this->_users[i].getChannels().end(); it++)
     {
-		//del_from_chan
 		for (std::vector<int>::iterator it_user = this->_channels[(*it)].getUsers().begin() ; it_user != this->_channels[(*it)].getUsers().end() ; it_user++)
 		{
 			if ((*it_user) == i)

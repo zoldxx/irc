@@ -9,11 +9,7 @@ bool	Server::pass(User & client, std::string cmd)
 		{
 			msg = "Password accepted.\r\n";
 			if (send(client.getFd(), msg.c_str(), msg.size(), 0) < 1)
-			{
-				    close(client.getFd());
-				    del_from_poll_fds(client.getFd());
-				    return (false);
-			}
+				return (false);
 			if (client.getStatus() == 1) 
 				client.setStatus(2); 
 			return (true);
@@ -21,7 +17,5 @@ bool	Server::pass(User & client, std::string cmd)
 	}
 	msg = "Wrong password\r\n";
 	send(client.getFd(), msg.c_str(), msg.size(), 0);
-    close(client.getFd());
-    del_from_poll_fds(client.getFd());
-	return (false);
+    return (false);
 }
