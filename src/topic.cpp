@@ -1,5 +1,5 @@
-#include "inc/server.hpp"
-#include "inc/irc.hpp"
+#include "../inc/server.hpp"
+#include "../inc/irc.hpp"
 
 
 bool	Server::topic(User &client, std::string cmd)

@@ -1,5 +1,5 @@
-#include "inc/server.hpp"
-#include "inc/user.hpp"
+#include "../inc/server.hpp"
+#include "../inc/user.hpp"
 
 Server* Server::_ptrServer = NULL;
 

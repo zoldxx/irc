@@ -1,4 +1,4 @@
-#include "inc/server.hpp"
+#include "../inc/server.hpp"
 
 bool	Server::is_valid_nick(std::string nick, std::string &msg)
 {

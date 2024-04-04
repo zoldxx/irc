@@ -1,4 +1,4 @@
-#include "inc/server.hpp"
+#include "../inc/server.hpp"
     
 const char  *Server::init_failed::what(void) const throw()
 {   

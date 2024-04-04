@@ -1,4 +1,4 @@
-#include "inc/server.hpp"
+#include "../inc/server.hpp"
 
 std::string extract(const std::string& chaine, std::string begin, std::string end) 
 {

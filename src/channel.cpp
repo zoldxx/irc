@@ -1,4 +1,4 @@
-#include "inc/channel.hpp"
+#include "../inc/channel.hpp"
 
 Channel::Channel() : _topic(""), _m_invit(false), _m_topic(false), _m_maxUser(-1), _m_password("")
 {
