@@ -1,4 +1,4 @@
-#include "inc/server.hpp"
+#include "../inc/server.hpp"
 
 bool Server::user(User & client, std::string cmd)
 {

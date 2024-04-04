@@ -1,4 +1,4 @@
-#include "inc/irc.hpp"
+#include "../inc/irc.hpp"
 
 User::User() : _username("")
 {

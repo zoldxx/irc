@@ -1,4 +1,4 @@
-#include "inc/server.hpp"
+#include "../inc/server.hpp"
 
 bool	Server::mode_send_message(int fd, std::string msg)
 {

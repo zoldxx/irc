@@ -1,4 +1,4 @@
-#include "inc/irc.hpp"
+#include "../inc/irc.hpp"
 
 const char  *invalid_args::what(void) const throw()
 {   

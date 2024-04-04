@@ -1,4 +1,4 @@
-#include "inc/server.hpp"
+#include "../inc/server.hpp"
 
 void Server::kick_from_a_chan(std::string &chan, int fd_to_kick)
 {

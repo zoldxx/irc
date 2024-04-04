@@ -1,4 +1,4 @@
-#include "inc/server.hpp"
+#include "../inc/server.hpp"
 
 void Server::fill_join_msg(std::string &serv_msg, std::string &channel_name, User &client)
 {

@@ -1,4 +1,4 @@
-	#include "inc/server.hpp"
+#include "../inc/server.hpp"
 
 bool	Server::initNickAndChan(std::string &nick, std::string &channel, User &client, std::string cmd)
 {
