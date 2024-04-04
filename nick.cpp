@@ -17,7 +17,7 @@ bool	Server::is_valid_nick(std::string nick, std::string &msg)
 	}
 	for (size_t i = 0; i < nick.size(); ++i)
 	{
-		if (!std::isgraph(nick[i]))
+		if (!std::isalnum(nick[i]))
 		{
     		msg = ":" + nick + "!~" + "*@bdtServer 432 " + ": Erroneous nickname\r\n";
 			return (false);

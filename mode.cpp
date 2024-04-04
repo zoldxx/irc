@@ -29,7 +29,7 @@ bool	Server::mode_print_info(User & client, std::string name, Channel &chan)
 {
 	std::string					msg;
 
-	msg = ":localhost 324 " + client.getNick() + " " + name + " +";
+	msg = ":localhost 324 " + client.getNick() + " #" + name + " +";
 	if (chan.getMTopic() == true)
 		msg += "t";
 	if (chan.getInvit() == true)
@@ -240,7 +240,7 @@ bool	Server::mode(User &client, std::string cmd)
 		}
 		else
 		{
-			if (mode_send_message(client.getFd(), ":localost 472 " + client.getNick() + " " + *ite + " :is unknown mode char to me"))
+			if (mode_send_message(client.getFd(), ":localost 472 " + client.getNick() + " " + *ite + " :is unknown mode char to me\r\n"))
 				return (false);
 		}
 	}
