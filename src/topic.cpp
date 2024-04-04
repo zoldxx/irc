@@ -7,7 +7,7 @@ bool	Server::topic(User &client, std::string cmd)
 	std::string serv_msg;
 	std::string chan = extract(cmd, "#", ":");
 	std::string newtopic = extract(cmd, ":", "\0");
-	if (!_channels[chan].isOperator(client.getFd()))
+	if (_channels[chan].getMTopic() == true && !_channels[chan].isOperator(client.getFd()))
 	{
 		serv_msg = ":localhost 482 #" + chan + " :You're not channel operator\r\n";
 		if (send(client.getFd(), serv_msg.c_str(), serv_msg.size(), 0) < 1)
