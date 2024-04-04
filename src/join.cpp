@@ -99,6 +99,9 @@ bool Server::join(User &client, std::string cmd)
     client.addChannel(channel_name);
     fill_join_msg(serv_msg, channel_name, client);
     std::string msg_to_send = ":" + client.getNick() + "!~" + client.getUsername() + " JOIN :#" + channel_name + "\r\n";
+    std::vector<int>::iterator it = std::find(_channels[channel_name].getWhitelist().begin(), _channels[channel_name].getWhitelist().end(), client.getFd());
+    if (it != _channels[channel_name].getWhitelist().end())
+        _channels[channel_name].getWhitelist().erase(it);
     if (send_join_msg(client, channel_name, serv_msg, msg_to_send) == false)
         return (false);
     return (0);

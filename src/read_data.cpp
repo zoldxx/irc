@@ -59,7 +59,6 @@ void		Server::handleMessage(int i)
     	std::string::size_type		end;
     	std::string::size_type		space;
 		
-		// std::cout <<  "line =" << line << std::endl;
 		_users.find(fd)->second.setBuffer("");
 		while ((end = line.find("\r\n", 0)) != std::string::npos)
 		{
@@ -68,7 +67,6 @@ void		Server::handleMessage(int i)
 			if ((space = cmd.find(" ", 0)) != std::string::npos)
 			{
 				tmp = cmd.substr(0, space);
-				// std::cout <<  "tmp =" << tmp << std::endl;
 				cmd.erase(0, space + 1);
 				if (_command.find(tmp) != _command.end())
 					(this->*_command[tmp])(_users.find(fd)->second, cmd);

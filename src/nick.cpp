@@ -57,7 +57,7 @@ bool Server::nick(User & client, std::string cmd)
 	client.setNick(cmd);
 	if (client.getStatus() == 2)
 		client.setStatus(3);
-	if (client.getUsername() != "")
+	if (client.getUsername() != "" && client.getStatus() != 4)
 	{
 		msg = ":localhost 001 " + client.getNick() + " :Welcome to bdtServer " + client.getNick() + "!~" + client.getUsername() + "@127.0.0.1\r\n";
  		if (send(client.getFd(), msg.c_str(), msg.size(), 0) < 1)

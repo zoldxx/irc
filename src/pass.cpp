@@ -3,6 +3,8 @@
 bool	Server::pass(User & client, std::string cmd)
 {
 	std::string		msg;
+	if (client.getStatus() != 1)
+		return (false);
 	if (cmd.find(" ", 0) == std::string::npos)
 	{	
 		if (cmd == this->_mdp)
