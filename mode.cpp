@@ -148,6 +148,11 @@ bool	Server::mode(User &client, std::string cmd)
 		chan = &_channels[param[0]];
 	if (param.size() == 1)
 		return (mode_print_info(client, param[0], *chan));
+	if (std::find(chan->getOperators().begin(), chan->getOperators().end(), client.getFd()) == chan->getOperators().end())
+	{
+		mode_send_message(client.getFd(), ":localost 482 " + client.getNick() + " #" + param[0] + " :You're not channel operator\r\n");
+		return (false);
+	}
 	if (mode_check_option(param[1], client, param[0]) == false)
 		return (false);
 	for (std::string::iterator ite = param[1].begin(); ite != param[1].end() ; ite++)
@@ -187,15 +192,7 @@ bool	Server::mode(User &client, std::string cmd)
 						std::istringstream iss(param[2].c_str());
 						int result;
 						if ((iss >> result))
-						{
-							if (result > static_cast<int>(chan->getUsers().size() + chan->getOperators().size()))
-								chan->setMaxUser(result);
-							else
-							{
-								if (mode_send_message(client.getFd(), ":localost " + client.getNick() + " " + param[2] + " :there are already too many users in the channel to set this limit") == false)
-									return (false);
-							}
-						}
+							chan->setMaxUser(result);
 					}
 					else
 						chan->setMaxUser(-1);
@@ -208,7 +205,7 @@ bool	Server::mode(User &client, std::string cmd)
 						{
 							if (chan->isInChan(iter->second.getFd()) == false)
 							{
-								if (mode_send_message(client.getFd(), ":localost 441 " + client.getNick() + " " + param[2] + " :They aren't on that channel") == false)
+								if (mode_send_message(client.getFd(), ":localost 441 " + client.getNick() + " " + param[2] + " :They aren't on that channel\r\n") == false)
 									return (false);
 							}
 							break;
@@ -240,7 +237,7 @@ bool	Server::mode(User &client, std::string cmd)
 		}
 		else
 		{
-			if (mode_send_message(client.getFd(), ":localost 472 " + client.getNick() + " " + *ite + " :is unknown mode char to me\r\n"))
+			if (mode_send_message(client.getFd(), ":localhost 472 " + client.getNick() + " " + *ite + " :is unknown mode char to me\r\n"))
 				return (false);
 		}
 	}
