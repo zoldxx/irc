@@ -155,7 +155,6 @@ bool	Server::mode(User &client, std::string cmd)
 	}
 	if (mode_check_option(param[1], client, param[0]) == false)
 		return (false);
-	// >> :choopa.nj.us.dal.net 461 tgeorge MODE +l :Not enough parameters
 	for (std::string::iterator ite = param[1].begin(); ite != param[1].end() ; ite++)
 	{
 		if (*ite == '+')
@@ -182,7 +181,11 @@ bool	Server::mode(User &client, std::string cmd)
 					break;
 				case 2:
 					if (type == true)
+					{
+						if (param.size() < 3)
+							break;
 						chan->setPassword(param[2]);
+					}
 					else
 						chan->setPassword("");
 					mode_set_message(msg, res, 'k', type, param);
@@ -190,6 +193,11 @@ bool	Server::mode(User &client, std::string cmd)
 				case 3:
 					if (type == true)
 					{
+						if (param.size() < 3)
+						{
+							mode_send_message(client.getFd(), ":localhost 461 " + client.getNick() + " MODE +l :Not enough parameters\r\n");
+							break;
+						}
 						std::istringstream iss(param[2].c_str());
 						int result;
 						if ((iss >> result))
@@ -200,6 +208,8 @@ bool	Server::mode(User &client, std::string cmd)
 					mode_set_message(msg, res, 'l', type, param);
 					break;
 				case 4:
+					if (param.size() < 3)
+						break;
 					while (iter != _users.end())
 					{
 						if (iter->second.getNick() == param[2])
@@ -238,10 +248,12 @@ bool	Server::mode(User &client, std::string cmd)
 		}
 		else
 		{
-			if (mode_send_message(client.getFd(), ":localhost 472 " + client.getNick() + " " + *ite + " :is unknown mode char to me\r\n"))
+			if (!mode_send_message(client.getFd(), ":localhost 472 " + client.getNick() + " " + *ite + " :is unknown mode char to me\r\n"))
 				return (false);
 		}
 	}
+	if (*(msg.end() - 1) == ' ')
+		return (true);
 	msg += res + "\r\n";
     for (std::vector<int>::iterator ite = chan->getUsers().begin(); ite != chan->getUsers().end(); ite++)
 			mode_send_message(*ite, msg);

@@ -110,7 +110,7 @@ bool	Server::invite(User & client, std::string cmd)
 					break;
 			if (it_oper == it_channel->second.getOperators().end())
 			{
-				msg = ":localhost 482 " + client.getNick() + " " + channel + " :You're not channel operator\r\n";
+				msg = ":localhost 482 " + client.getNick() + " #" + channel + " :You're not channel operator\r\n";
 				if (send(client.getFd(), msg.c_str(), msg.size(), 0) < 1)
 					del_user(client.getFd());
 				return false;
