@@ -150,11 +150,12 @@ bool	Server::mode(User &client, std::string cmd)
 		return (mode_print_info(client, param[0], *chan));
 	if (std::find(chan->getOperators().begin(), chan->getOperators().end(), client.getFd()) == chan->getOperators().end())
 	{
-		mode_send_message(client.getFd(), ":localost 482 " + client.getNick() + " #" + param[0] + " :You're not channel operator\r\n");
+		mode_send_message(client.getFd(), ":localhost 482 " + client.getNick() + " #" + param[0] + " :You're not channel operator\r\n");
 		return (false);
 	}
 	if (mode_check_option(param[1], client, param[0]) == false)
 		return (false);
+	// >> :choopa.nj.us.dal.net 461 tgeorge MODE +l :Not enough parameters
 	for (std::string::iterator ite = param[1].begin(); ite != param[1].end() ; ite++)
 	{
 		if (*ite == '+')
